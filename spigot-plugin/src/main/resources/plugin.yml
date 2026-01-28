@@ -1,0 +1,13 @@
+main: com.cgms.minecraft.spigot.plugin.MyPlugin # The full path to your main class
+name: MyPlugin # The name of your plugin
+version: 1.0 # The version of your plugin
+author: YourName # Your name or the author's name
+description: An example Spigot plugin # A brief description
+api-version: 1.21 # The API version your plugin uses, helps with compatibility
+depend: [Citizens]
+
+commands:
+  gui:
+    description: "Opens a GUI"
+    usage: "/gui"
+    permission:
