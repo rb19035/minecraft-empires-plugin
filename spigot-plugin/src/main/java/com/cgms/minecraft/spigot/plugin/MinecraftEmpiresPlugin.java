@@ -22,7 +22,7 @@ public class MinecraftEmpiresPlugin extends JavaPlugin
         getServer().getPluginManager().registerEvents( new NpcSpawnItemDroppedListener(), this);
         getServer().getPluginManager().registerEvents( new GuiListener(), this );
 
-        getCommand( "npc-gui" ).setExecutor( new NpcGuiCommand() );
+        this.getCommand( "npc-gui" ).setExecutor( new NpcGuiCommand() );
     }
 
     @Override

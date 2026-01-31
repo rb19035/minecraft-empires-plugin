@@ -48,7 +48,7 @@ public class NpcFactory
         {
             // Added standard archer equipment
             npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.LEATHER_BOOTS, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.CHAINMAIL_HELMET, 1 ) );
+            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.IRON_HELMET, 1 ) );
             npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.LEATHER_CHESTPLATE, 1 ) );
             npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.LEATHER_LEGGINGS, 1 ) );
 
@@ -71,8 +71,8 @@ public class NpcFactory
             npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.CHAINMAIL_BOOTS, 1 ) );
             npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.CHAINMAIL_HELMET, 1 ) );
             npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.GOLDEN_CHESTPLATE, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.CHAINMAIL_LEGGINGS, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.BOW, 1 ) );
+            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.IRON_LEGGINGS, 1 ) );
+            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.IRON_SWORD, 1 ) );
 
             LOGGER.debug( "Spawned NPC Type:" + MinecraftAiConstants.BODYGUARD );
             LOGGER.info( "Guarding player ID: " + player.getUniqueId() );
