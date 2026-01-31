@@ -42,7 +42,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        com.cgms.minecraft.spigot.plugin.MyPlugin
+                                        com.cgms.minecraft.spigot.plugin.MinecraftEmpiresPlugin
                                     </mainClass>
                                 </manifest>
                             </archive>

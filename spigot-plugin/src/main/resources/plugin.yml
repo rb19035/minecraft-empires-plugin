@@ -1,4 +1,4 @@
-main: com.cgms.minecraft.spigot.plugin.MyPlugin # The full path to your main class
+main: com.cgms.minecraft.spigot.plugin.MinecraftEmpiresPlugin # The full path to your main class
 name: MyPlugin # The name of your plugin
 version: 1.0 # The version of your plugin
 author: YourName # Your name or the author's name
@@ -8,6 +8,6 @@ depend: [Citizens]
 
 commands:
   gui:
-    description: "Opens a GUI"
-    usage: "/gui"
+    description: "Opens a the NPC allocation GUI"
+    usage: "/npc-gui"
     permission:

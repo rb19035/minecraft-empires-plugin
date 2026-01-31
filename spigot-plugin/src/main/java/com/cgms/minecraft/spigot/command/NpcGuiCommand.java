@@ -13,9 +13,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.logging.Logger;
 
-public class GuiCommand implements CommandExecutor
+public class NpcGuiCommand implements CommandExecutor
 {
-    private static Logger LOGGER = Logger.getLogger( GuiCommand.class.getName() );
+    private static Logger LOGGER = Logger.getLogger( NpcGuiCommand.class.getName() );
 
     @Override
     public boolean onCommand( CommandSender commandSender, Command command, String s, String[] strings )
@@ -29,7 +29,7 @@ public class GuiCommand implements CommandExecutor
         }
 
         Player player = (Player) commandSender;
-        Inventory inventory = Bukkit.createInventory( player, 9*3, "Test Inventory Menu" );
+        Inventory inventory = Bukkit.createInventory( player, 9*3, "Empires NPC Menu" );
 
         ItemStack npcButton = new ItemStack( Material.PLAYER_HEAD );
         ItemMeta npcButtonMeta = npcButton.getItemMeta();
