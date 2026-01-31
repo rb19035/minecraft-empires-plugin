@@ -1,6 +1,7 @@
 package com.cgms.minecraft.spigot.util;
 
 
+import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresPlugin;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
@@ -12,12 +13,12 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.mcmonkey.sentinel.SentinelTrait;
-
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NpcFactory
 {
-    private static final Logger LOGGER = Logger.getLogger( NpcFactory.class.getName() );
+    private static final Logger LOGGER = LoggerFactory.getLogger( NpcFactory.class.getName() );
 
     private NpcFactory() {}
 
@@ -41,7 +42,7 @@ public class NpcFactory
             npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.IRON_SWORD, 1 ) );
             npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.OFF_HAND, new ItemStack( Material.SHIELD, 1 ) );
 
-            LOGGER.fine( "Spawned NPC Type:" + MinecraftAiConstants.ARMORED_KNIGHT );
+            LOGGER.debug( "Spawned NPC Type:" + MinecraftAiConstants.ARMORED_KNIGHT );
 
         } else if ( npcType.equalsIgnoreCase( MinecraftAiConstants.ARCHER ) )
         {
@@ -59,7 +60,7 @@ public class NpcFactory
                 bukkitInventory.setItem( i, new ItemStack( Material.ARROW, 64) );
             }
 
-            LOGGER.fine( "Spawned NPC Type:" + MinecraftAiConstants.ARCHER );
+            LOGGER.debug( "Spawned NPC Type:" + MinecraftAiConstants.ARCHER );
 
         } else if ( npcType.equalsIgnoreCase( MinecraftAiConstants.BODYGUARD ) )
         {
@@ -73,7 +74,7 @@ public class NpcFactory
             npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.CHAINMAIL_LEGGINGS, 1 ) );
             npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.BOW, 1 ) );
 
-            LOGGER.fine( "Spawned NPC Type:" + MinecraftAiConstants.BODYGUARD );
+            LOGGER.debug( "Spawned NPC Type:" + MinecraftAiConstants.BODYGUARD );
             LOGGER.info( "Guarding player ID: " + player.getUniqueId() );
 
         } else if ( npcType.equalsIgnoreCase( MinecraftAiConstants.FOOT_SOLDIER ) )
@@ -84,7 +85,7 @@ public class NpcFactory
             npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.CHAINMAIL_LEGGINGS, 1 ) );
             npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.IRON_SWORD, 1 ) );
 
-            LOGGER.fine( "Spawned NPC Type:" + MinecraftAiConstants.FOOT_SOLDIER );
+            LOGGER.debug( "Spawned NPC Type:" + MinecraftAiConstants.FOOT_SOLDIER );
         }
 
         // Get the Owner trait and set the owner

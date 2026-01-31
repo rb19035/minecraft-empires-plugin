@@ -5,12 +5,12 @@ import com.cgms.minecraft.spigot.listener.GuiListener;
 import com.cgms.minecraft.spigot.listener.NpcNavigationCompleteListener;
 import com.cgms.minecraft.spigot.listener.NpcSpawnItemDroppedListener;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MinecraftEmpiresPlugin extends JavaPlugin
 {
-    private static final Logger LOGGER = Logger.getLogger( MinecraftEmpiresPlugin.class.getName() );
+    private static final Logger LOGGER = LoggerFactory.getLogger( MinecraftEmpiresPlugin.class.getName() );
 
     @Override
     public void onEnable()

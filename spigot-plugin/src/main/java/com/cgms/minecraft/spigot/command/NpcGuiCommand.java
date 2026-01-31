@@ -10,17 +10,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.logging.Logger;
 
 public class NpcGuiCommand implements CommandExecutor
 {
-    private static Logger LOGGER = Logger.getLogger( NpcGuiCommand.class.getName() );
+    private static final Logger LOGGER = LoggerFactory.getLogger( NpcGuiCommand.class.getName() );
 
     @Override
     public boolean onCommand( CommandSender commandSender, Command command, String s, String[] strings )
     {
-        LOGGER.info( "GUI Command fired." );
+        LOGGER.debug( "GUI Command fired." );
 
         if( ! (commandSender instanceof Player) )
         {

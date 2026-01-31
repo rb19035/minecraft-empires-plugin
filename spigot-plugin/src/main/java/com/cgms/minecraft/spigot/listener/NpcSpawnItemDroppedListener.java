@@ -8,18 +8,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class NpcSpawnItemDroppedListener implements Listener
 {
-    private static final Logger LOGGER = Logger.getLogger( NpcSpawnItemDroppedListener.class.getName() );
+    private static final Logger LOGGER = LoggerFactory.getLogger( NpcSpawnItemDroppedListener.class.getName() );
 
     @EventHandler
     public void onDrop( PlayerDropItemEvent event )
     {
-        LOGGER.info( "PlayerDropItemEvent caught for custom NPC." );
+        LOGGER.debug( "PlayerDropItemEvent caught for custom NPC." );
 
         Player player = event.getPlayer();
         NPC npc = null;
@@ -27,7 +28,7 @@ public class NpcSpawnItemDroppedListener implements Listener
         Item droppedItem = event.getItemDrop();
         if ( droppedItem.getItemStack().getType() == Material.PLAYER_HEAD )
         {
-            LOGGER.info( "PlayerDropItemEvent caught for custom NPC." );
+            LOGGER.debug( "PlayerDropItemEvent caught for custom NPC." );
 
             // Remove the dropped diamond
             droppedItem.remove();

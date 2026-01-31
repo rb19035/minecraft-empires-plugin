@@ -6,12 +6,12 @@ import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NpcNavigationCompleteListener implements Listener
 {
-    private static final Logger LOGGER = Logger.getLogger("NpcNavigationCompleteListener");
+    private static final Logger LOGGER = LoggerFactory.getLogger( NpcNavigationCompleteListener.class.getName() );
     private static Location LOCATION1 = null;
     private static Location LOCATION2 = null;
 
@@ -26,13 +26,6 @@ public class NpcNavigationCompleteListener implements Listener
     private static boolean AT_ORIGINAL_LOCATION = false;
 
 
-/*** Remote Server *****/
-//    private static double X_COORDINATE = 311.207;
-//    private static double Y_COORDINATE = 73.00;
-//    private static double Z_COORDINATE = -170.547;
-    /*** Remote Server *****/
-
-
     @EventHandler
     public void onNavigationComplete( NavigationCompleteEvent event)
     {
@@ -41,7 +34,7 @@ public class NpcNavigationCompleteListener implements Listener
         // Example: Make the NPC wander to a new random location upon completion
         if (npc.getName().equals("Armored knight"))
         {
-            LOGGER.fine( "Armored Knight navigation completed." );
+            LOGGER.debug( "Armored Knight navigation completed." );
 
             Location tempLocation = npc.getEntity().getLocation();
 
@@ -49,17 +42,17 @@ public class NpcNavigationCompleteListener implements Listener
             int yLocation = tempLocation.getBlockY();
             int zLocation = tempLocation.getBlockZ();
 
-            LOGGER.fine( "x = " + xLocation + " || y = " + yLocation + " || z = " + zLocation );
+            LOGGER.debug( "x = " + xLocation + " || y = " + yLocation + " || z = " + zLocation );
 
             if( AT_ORIGINAL_LOCATION )
             {
-                LOGGER.fine( "Armored Knight navigating to location 1." );
+                LOGGER.debug( "Armored Knight navigating to location 1." );
                 npc.getNavigator().setTarget( LOCATION2 );
                 AT_ORIGINAL_LOCATION = false;
 
             } else
             {
-                LOGGER.fine( "Armored Knight navigating to location 2." );
+                LOGGER.debug( "Armored Knight navigating to location 2." );
                 npc.getNavigator().setTarget( LOCATION1 );
                 AT_ORIGINAL_LOCATION = true;
             }
@@ -74,7 +67,7 @@ public class NpcNavigationCompleteListener implements Listener
 
         if( npc.getName().equals( "Armored knight" ) )
         {
-            LOGGER.fine( "Armored Knight was spawned." );
+            LOGGER.debug( "Armored Knight was spawned." );
 
             LOCATION2 = new Location( npc.getEntity().getWorld(), X_TO_COORDINATE, Y_TO_COORDINATE, Z_TO_COORDINATE );
             LOCATION1 = new Location( npc.getEntity().getWorld(), X_COORDINATE, Y_COORDINATE, Z_COORDINATE );
