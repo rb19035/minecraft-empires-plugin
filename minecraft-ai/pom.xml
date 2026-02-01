@@ -12,7 +12,7 @@
     </parent>
 
     <groupId>com.cgms.minecraft</groupId>
-    <artifactId>minecraft-kingdoms-ai</artifactId>
+    <artifactId>minecraft-empires-ai</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
