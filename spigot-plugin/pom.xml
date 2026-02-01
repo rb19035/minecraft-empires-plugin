@@ -4,6 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>com.cgms</groupId>
+        <artifactId>minecraft-empires</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <groupId>com.cgms.minecraft</groupId>
     <artifactId>spigot-kingdoms-plugin</artifactId>
     <version>0.1-SNAPSHOT</version>
@@ -13,6 +20,11 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+
+
+
+
 
     <repositories>
         <repository>
@@ -106,6 +118,4 @@
         </dependency>
 
     </dependencies>
-
-
 </project>
