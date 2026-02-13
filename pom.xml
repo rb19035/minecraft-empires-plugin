@@ -27,11 +27,11 @@
             <url>https://maven.citizensnpcs.co/repo</url>
         </repository>
 
-        <repository>
-            <!-- Some minecraft jars are sus and do not have a maven repo and must be manually included in project -->
-            <id>project-local-repo</id>
-            <url>file:/${basedir}/src/main/resources/libs</url>
-        </repository>
+<!--        <repository>-->
+<!--            &lt;!&ndash; Some minecraft jars are sus and do not have a maven repo and must be manually included in project &ndash;&gt;-->
+<!--            <id>project-local-repo</id>-->
+<!--            <url>file:/${basedir}/src/main/resources/libs</url>-->
+<!--        </repository>-->
 
     </repositories>
 
