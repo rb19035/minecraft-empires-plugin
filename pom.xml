@@ -30,7 +30,7 @@
         <repository>
             <!-- Some minecraft jars are sus and do not have a maven repo and must be manually included in project -->
             <id>project-local-repo</id>
-            <url>file://${basedir}/src/main/resources/libs</url>
+            <url>file:/${basedir}/src/main/resources/libs</url>
         </repository>
 
     </repositories>
