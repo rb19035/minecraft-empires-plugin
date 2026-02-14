@@ -1,7 +1,7 @@
 package com.cgms.minecraft.spigot.util;
 
 
-import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresPlugin;
+import lombok.NonNull;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
@@ -16,13 +16,14 @@ import org.mcmonkey.sentinel.SentinelTrait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class NpcFactory
 {
     private static final Logger LOGGER = LoggerFactory.getLogger( NpcFactory.class.getName() );
 
     private NpcFactory() {}
 
-    public static NPC spawnNPC( Location location, String npcType, Player player, String name )
+    public static NPC spawnNPC( @NonNull Location location, @NonNull String npcType, @NonNull Player player, String name )
     {
         NPC npc = CitizensAPI.getNPCRegistry().createNPC( EntityType.PLAYER, name);
 
