@@ -1,0 +1,15 @@
+logging:
+  level:
+    root: INFO
+    com.cgms: DEBUG
+spring:
+  server: 2224
+  activemq:
+    broker-url: "tcp://localhost:61616"
+    user: "${activemq.username}"
+    password: "${activemq.username}"
+  ai:
+    google:
+      genai:
+        api-key: "${google.api.key}"
+        model: "gemini-pro"
