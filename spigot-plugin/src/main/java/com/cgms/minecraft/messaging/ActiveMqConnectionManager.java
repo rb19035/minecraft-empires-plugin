@@ -13,6 +13,7 @@ public class ActiveMqConnectionManager
 {
     private static final Logger LOGGER = LoggerFactory.getLogger( ActiveMqConnectionManager.class );
     private static final String AI_RESPONSE_QUEUE = "ai.response.queue";
+    private static final String HEARTBEAT_RESPONSE_QUEUE = "heartbeat.response.queue";
 
     private final String brokerUrl;
     private final String username;
@@ -20,41 +21,62 @@ public class ActiveMqConnectionManager
 
     private Connection connection;
     private Session session;
-    private AiRequestQueueSender requestSender;
+    private AiRequestQueueSender aiRequestQueueSender;
+    private HeartbeatRequestQueueSender heartbeatRequestQueueSender;
 
-    public ActiveMqConnectionManager( String brokerUrl, String username, String password )
+    private static ActiveMqConnectionManager INSTANCE;
+
+    private ActiveMqConnectionManager( String brokerUrl, String username, String password )
     {
         this.brokerUrl = brokerUrl;
         this.username = username;
         this.password = password;
     }
 
+    public static ActiveMqConnectionManager getInstance()
+    {
+        if ( INSTANCE == null )
+        {
+            INSTANCE = new ActiveMqConnectionManager( "tcp://localhost:61616", "admin", "admin" );
+        }
+
+        return INSTANCE;
+    }
+
     public void start() throws JMSException
     {
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory( brokerUrl );
-        connectionFactory.setUserName( username );
-        connectionFactory.setPassword( password );
+        if( this.connection == null )
+        {
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory( this.brokerUrl );
+            connectionFactory.setUserName( this.username );
+            connectionFactory.setPassword( this.password );
 
-        connection = connectionFactory.createConnection();
-        session = connection.createSession( false, Session.AUTO_ACKNOWLEDGE );
+            this.connection = connectionFactory.createConnection();
+            this.session = this.connection.createSession( false, Session.AUTO_ACKNOWLEDGE );
 
-        Queue responseQueue = session.createQueue( AI_RESPONSE_QUEUE );
-        MessageConsumer consumer = session.createConsumer( responseQueue );
-        consumer.setMessageListener( new AiResponseQueueListener() );
+            Queue responseQueue = this.session.createQueue( AI_RESPONSE_QUEUE );
+            MessageConsumer aiResponseConsumer = this.session.createConsumer( responseQueue );
+            aiResponseConsumer.setMessageListener( new AiResponseQueueListener() );
 
-        requestSender = new AiRequestQueueSender( session );
+            Queue heartbeatQueue = this.session.createQueue( HEARTBEAT_RESPONSE_QUEUE );
+            MessageConsumer heartbeatResponseConsumer = this.session.createConsumer( heartbeatQueue );
+            heartbeatResponseConsumer.setMessageListener( new HeartbeatResponseQueueListener() );
 
-        connection.start();
-        LOGGER.info( "ActiveMQ connection established. Listening on queue: {}", AI_RESPONSE_QUEUE );
+            this.aiRequestQueueSender = new AiRequestQueueSender( this.session );
+            this.heartbeatRequestQueueSender = new HeartbeatRequestQueueSender( this.session );
+
+            this.connection.start();
+            LOGGER.info( "ActiveMQ connection established. Listening on queues: {}, {}", AI_RESPONSE_QUEUE, HEARTBEAT_RESPONSE_QUEUE );
+        }
     }
 
     public void stop()
     {
         try
         {
-            if ( connection != null )
+            if ( this.connection != null )
             {
-                connection.close();
+                this.connection.close();
                 LOGGER.info( "ActiveMQ connection closed" );
             }
         }
@@ -64,8 +86,13 @@ public class ActiveMqConnectionManager
         }
     }
 
-    public AiRequestQueueSender getRequestSender()
+    public AiRequestQueueSender getAiRequestQueueSender()
     {
-        return requestSender;
+        return this.aiRequestQueueSender;
+    }
+
+    public HeartbeatRequestQueueSender getHeartbeatRequestQueueSender()
+    {
+        return this.heartbeatRequestQueueSender;
     }
 }
