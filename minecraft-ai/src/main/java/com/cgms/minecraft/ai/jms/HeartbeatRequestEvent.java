@@ -1,4 +1,4 @@
-package com.cgms.minecraft.messaging;
+package com.cgms.minecraft.ai.jms;
 
 
 import java.util.Date;
@@ -39,4 +39,5 @@ public class HeartbeatRequestEvent
     {
         this.timestamp = date;
     }
+
 }

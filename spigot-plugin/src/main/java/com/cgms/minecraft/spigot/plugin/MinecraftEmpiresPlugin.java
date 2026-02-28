@@ -6,8 +6,11 @@ import com.cgms.minecraft.spigot.command.NpcGuiCommand;
 import com.cgms.minecraft.spigot.listener.GuiListener;
 import com.cgms.minecraft.spigot.listener.NpcNavigationCompleteListener;
 import com.cgms.minecraft.spigot.listener.NpcSpawnItemDroppedListener;
+import com.cgms.minecraft.spigot.schedule.job.AiServerHeartbeatJob;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +23,7 @@ public class MinecraftEmpiresPlugin extends JavaPlugin
 {
     private static final Logger LOGGER = LoggerFactory.getLogger( MinecraftEmpiresPlugin.class.getName() );
 
-    private static final String CONFIG_FILE_PATH = "./config.properties";
+
     private String mqttBrokerUrl;
     private String mqttUsername;
     private String mqttPassword;
@@ -43,6 +46,23 @@ public class MinecraftEmpiresPlugin extends JavaPlugin
             // Start the ActiveMQ connection manager
             ActiveMqConnectionManager.getInstance().start();
 
+            SchedulerFactory sf = new StdSchedulerFactory();
+            Scheduler scheduler = sf.getScheduler();
+
+            // Init AI server heartbeat job
+            JobDetail job = JobBuilder.newJob( AiServerHeartbeatJob.class )
+                    .withIdentity("aiServerHeartbeatJob", "heartbeatGroup" )
+                    .build();
+
+            Trigger trigger = TriggerBuilder.newTrigger()
+                    .withIdentity("aiServerHeartbeatJobTrigger", "heartbeatGroup")
+                    .startNow()
+                    .withSchedule(CronScheduleBuilder.cronSchedule("0 0/5 * * * ?")) // Run every 5 minutes
+                    .build();
+
+            scheduler.scheduleJob(job, trigger);
+            scheduler.start();
+
             LOGGER.info( "Minecraft Empires Plugin has been enabled!" );
 
         } catch ( JMSException jmse )
@@ -57,25 +77,7 @@ public class MinecraftEmpiresPlugin extends JavaPlugin
         }
     }
 
-    private void loadAiPropertiesFile()
-    {
-        Properties properties = new Properties();
 
-        try ( FileInputStream input = new FileInputStream( CONFIG_FILE_PATH ) )
-        {
-            properties.load( input );
-
-            LOGGER.debug( "Loaded AI properties file." );
-
-        } catch ( IOException e)
-        {
-            LOGGER.error( "Failed to load AI properties file. Will continue with default settings.", e );
-        }
-
-        this.mqttBrokerUrl = properties.getProperty( "mqtt.broker.url", "tcp://localhost:61616" );
-        this.mqttUsername = properties.getProperty( "mqtt.username", "admin" );
-        this.mqttPassword = properties.getProperty( "mqtt.password", "admin" );
-    }
 
     @Override
     public void onDisable()

@@ -10,4 +10,3 @@ commands:
   npc-gui:
     description: "Opens a the NPC allocation GUI"
     usage: "/npc-gui"
-    permission:

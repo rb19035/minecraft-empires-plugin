@@ -1,23 +1,22 @@
-package com.cgms.minecraft.messaging;
-
+package com.cgms.minecraft.ai.jms;
 
 import java.util.Date;
 
-public class HeartbeatRequestEvent
+public class HeartbeatResponseEvent
 {
     private String message;
-    private Date timestamp;
+    private Date date;
 
-    public HeartbeatRequestEvent()
+    public HeartbeatResponseEvent()
     {
         this.message = "";
-        this.timestamp = new Date();
+        this.date = new Date();
     }
 
-    public HeartbeatRequestEvent( String message )
+    public HeartbeatResponseEvent( String message )
     {
         this.message = message;
-        this.timestamp = new Date();
+        this.date = new Date();
     }
 
     public String getMessage()
@@ -25,9 +24,9 @@ public class HeartbeatRequestEvent
         return message;
     }
 
-    public Date getTimestamp()
+    public Date getDate()
     {
-        return timestamp;
+        return date;
     }
 
     public void setMessage( String message )
@@ -37,6 +36,6 @@ public class HeartbeatRequestEvent
 
     public void setDate( Date date )
     {
-        this.timestamp = date;
+        this.date = date;
     }
 }
