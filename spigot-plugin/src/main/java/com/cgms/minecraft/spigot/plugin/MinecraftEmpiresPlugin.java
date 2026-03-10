@@ -1,11 +1,9 @@
 package com.cgms.minecraft.spigot.plugin;
 
 import com.cgms.minecraft.messaging.ActiveMqConnectionManager;
-import com.cgms.minecraft.messaging.AiRequestQueueSender;
+import com.cgms.minecraft.spigot.command.MagicItemsGuiCommand;
 import com.cgms.minecraft.spigot.command.NpcGuiCommand;
-import com.cgms.minecraft.spigot.listener.GuiListener;
-import com.cgms.minecraft.spigot.listener.NpcNavigationCompleteListener;
-import com.cgms.minecraft.spigot.listener.NpcSpawnItemDroppedListener;
+import com.cgms.minecraft.spigot.listener.*;
 import com.cgms.minecraft.spigot.schedule.job.AiServerHeartbeatJob;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,9 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jms.JMSException;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
 
 public class MinecraftEmpiresPlugin extends JavaPlugin
 {
@@ -39,9 +34,15 @@ public class MinecraftEmpiresPlugin extends JavaPlugin
             PluginManager pluginManager = getServer().getPluginManager();
             pluginManager.registerEvents( new NpcNavigationCompleteListener(), this );
             pluginManager.registerEvents( new NpcSpawnItemDroppedListener(), this );
+            //pluginManager.registerEvents( new BellsOfTeleportationItemDroppedListener(), this );
+            pluginManager.registerEvents( new BellOfTeleportationBlockBreakListener( this ), this );
+            pluginManager.registerEvents( new BellOfTeleportationBlockPlacedListener( this ), this );
+            pluginManager.registerEvents( new BellOfTeleportationRingListener( this ), this );
             pluginManager.registerEvents( new GuiListener(), this );
 
+
             this.getCommand( "npc-gui" ).setExecutor( new NpcGuiCommand() );
+            this.getCommand( "magic-gui" ).setExecutor( new MagicItemsGuiCommand( this ) );
 
             // Start the ActiveMQ connection manager
             ActiveMqConnectionManager.getInstance().start();

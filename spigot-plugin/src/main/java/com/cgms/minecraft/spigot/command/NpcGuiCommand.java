@@ -26,7 +26,7 @@ public class NpcGuiCommand implements CommandExecutor
         if( ! (commandSender instanceof Player) )
         {
             commandSender.sendMessage( "Only players can use this command." );
-            return true;
+            return false;
         }
 
         Player player = (Player) commandSender;

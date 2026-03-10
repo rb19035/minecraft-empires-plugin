@@ -6,4 +6,6 @@ public class MinecraftAiConstants
     public static final String FOOT_SOLDIER = "Foot Soldier";
     public static final String BODYGUARD = "Bodyguard";
     public static final String ARCHER = "Archer";
+
+    public static final String BELLS_OF_TELEPORTATION = "Bells of Teleportation";
 }

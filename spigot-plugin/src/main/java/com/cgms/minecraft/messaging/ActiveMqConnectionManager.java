@@ -1,15 +1,14 @@
 package com.cgms.minecraft.messaging;
 
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.Queue;
-import javax.jms.Session;
-
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
+import javax.jms.Queue;
+import javax.jms.Session;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -19,7 +18,7 @@ public class ActiveMqConnectionManager
     private static final Logger LOGGER = LoggerFactory.getLogger( ActiveMqConnectionManager.class );
     private static final String AI_RESPONSE_QUEUE = "ai.response.queue";
     private static final String HEARTBEAT_RESPONSE_QUEUE = "heartbeat.response.queue";
-    private static final String CONFIG_FILE_PATH = "./minecraftEmpiresPluginConfig.properties";
+    private static final String CONFIG_FILE_PATH = "./plugins/Empires/minecraftEmpiresPluginConfig.properties";
 
     private String brokerUrl;
     private String username;
@@ -63,7 +62,7 @@ public class ActiveMqConnectionManager
             this.aiRequestQueueSender = new AiRequestQueueSender( this.session );
 
             this.activeMQConnection.start();
-            LOGGER.info( "ActiveMQ connection established. Listening on queues: {}, {}", AI_RESPONSE_QUEUE, HEARTBEAT_RESPONSE_QUEUE );
+            LOGGER.debug( "ActiveMQ connection established. Listening on queues: {}, {}", AI_RESPONSE_QUEUE, HEARTBEAT_RESPONSE_QUEUE );
         }
     }
 
@@ -75,7 +74,7 @@ public class ActiveMqConnectionManager
             {
                 this.session.close();
                 this.activeMQConnection.close();
-                LOGGER.info( "ActiveMQ session and connection closed." );
+                LOGGER.debug( "ActiveMQ session and connection closed." );
             }
         }
         catch ( JMSException e )

@@ -10,3 +10,6 @@ commands:
   npc-gui:
     description: "Opens a the NPC allocation GUI"
     usage: "/npc-gui"
+  magic-gui:
+    description: "Opens a the Magic Item GUI"
+    usage: "/magic-gui"
