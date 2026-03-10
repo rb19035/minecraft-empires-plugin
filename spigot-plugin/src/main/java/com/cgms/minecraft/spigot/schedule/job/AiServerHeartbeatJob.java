@@ -1,6 +1,7 @@
 package com.cgms.minecraft.spigot.schedule.job;
 
-import com.cgms.minecraft.messaging.*;
+import com.cgms.minecraft.messaging.HeartbeatQueueManager;
+import com.cgms.minecraft.messaging.HeartbeatRequestEvent;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
