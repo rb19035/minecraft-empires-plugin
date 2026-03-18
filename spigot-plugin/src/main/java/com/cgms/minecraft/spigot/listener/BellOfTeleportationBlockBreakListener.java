@@ -21,30 +21,7 @@ public class BellOfTeleportationBlockBreakListener implements Listener
     @EventHandler
     public void onBlockBreak( BlockBreakEvent event)
     {
-//        if (event.getBlock().getType() == Material.BELL)
-//        {
-//            LOGGER.info( "Bell block broken event caught." );
-//
-//            LOGGER.info( "Checking dropped item to see if it is a Bell of Teleportation." );
-//
-//            Block block = event.getBlock();
-//
-//            if (block.getState() instanceof TileState)
-//            {
-//                TileState state = (TileState) block.getState();
-//                PersistentDataContainer container = state.getPersistentDataContainer();
-//                NamespacedKey customKey = new NamespacedKey( this.plugin, "bellOfTeleportationUUID" );
-//
-//                if (container.has( customKey, PersistentDataType.STRING ) )
-//                {
-//                    String bellOfTeleportationUUID = container.get(customKey, PersistentDataType.STRING);
-//                    BellOfTeleportationUtil.getInstance().getBellOfTeleportation( bellOfTeleportationUUID ).setCurrentLocationOfPlacedBell( null );
-//
-//                    LOGGER.info( "Bell of teleportation found {}.", bellOfTeleportationUUID );
-//                    LOGGER.info( "Bell of location removed from Bell of Teleportation." );
-//                }
-//            }
-//        }
+
     }
 
 }

@@ -1,12 +1,10 @@
 package com.cgms.minecraft.spigot.util;
 
 import com.cgms.minecraft.spigot.item.BellOfTeleportation;
-import com.cgms.minecraft.spigot.item.BellOfTeleportationBlock;
-import com.cgms.minecraft.spigot.item.BellOfTeleportationItemStack;
 import lombok.NonNull;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.NamespacedKey;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.slf4j.Logger;
 
 import java.io.*;
@@ -20,14 +18,10 @@ public class BellOfTeleportationUtil implements Serializable
     private static BellOfTeleportationUtil INSTANCE = null;
 
     private final Map<String, BellOfTeleportation> uuidBellsOfTeleportationMap;
-    private final Map<BellOfTeleportationItemStack, BellOfTeleportation> itemStackBellOfTeleportationMap;
-    private final Map<BellOfTeleportationBlock, BellOfTeleportation> blockBellOfTeleportationMap;
 
     private BellOfTeleportationUtil()
     {
-        this.uuidBellsOfTeleportationMap = new ConcurrentHashMap<String, BellOfTeleportation>();
-        this.blockBellOfTeleportationMap = new ConcurrentHashMap<BellOfTeleportationBlock, BellOfTeleportation>();
-        this.itemStackBellOfTeleportationMap = new ConcurrentHashMap<BellOfTeleportationItemStack, BellOfTeleportation>();
+        this.uuidBellsOfTeleportationMap = new ConcurrentHashMap<>();
     }
 
     public static BellOfTeleportationUtil getInstance()
@@ -55,49 +49,36 @@ public class BellOfTeleportationUtil implements Serializable
         return INSTANCE;
     }
 
+    public BellOfTeleportation getBellOfTeleportationUUIDFromPersistentDataContainer( @NonNull PersistentDataContainer persistentDataContainer )
+    {
+        String uuid = persistentDataContainer.get(
+            NamespacedKey.minecraft( MinecraftAiConstants.BELLS_OF_TELEPORTATION_UUID_FIELD ),
+            PersistentDataType.STRING );
+
+        BellOfTeleportation bellOfTeleportation = null;
+        if( uuid != null )
+        {
+            bellOfTeleportation = this.getBellOfTeleportationByUUID( uuid );
+        }
+
+        return bellOfTeleportation;
+    }
 
     public BellOfTeleportation getBellOfTeleportationByUUID( @NonNull String uuid )
     {
         return this.uuidBellsOfTeleportationMap.get( uuid );
     }
 
-    public BellOfTeleportation getBellOfTeleportationByItemStack( @NonNull ItemStack itemStack)
-    {
-        BellOfTeleportationItemStack bellOfTeleportationItemStack = new BellOfTeleportationItemStack( itemStack.hashCode() );
-        return this.itemStackBellOfTeleportationMap.get( bellOfTeleportationItemStack );
-    }
 
-    public BellOfTeleportation getBellOfTeleportationByBlock( @NonNull Block block )
+    public void updateBellOfTeleportationMappings( BellOfTeleportation... bellOfTeleportations )
     {
-        Location location = block.getLocation();
-        BellOfTeleportationBlock bellOfTeleportationBlock = new BellOfTeleportationBlock(
-                location.getWorld().getName(), location.getX(), location.getY(), location.getZ()
-        );
-
-        return this.blockBellOfTeleportationMap.get( bellOfTeleportationBlock );
-    }
-
-    public void addBellOfTeleportation( @NonNull BellOfTeleportation bellOfTeleportation )
-    {
-        if( bellOfTeleportation.getBellOfTeleportationBlock() != null )
+        for( BellOfTeleportation bellOfTeleportation : bellOfTeleportations )
         {
-            this.blockBellOfTeleportationMap.put( bellOfTeleportation.getBellOfTeleportationBlock(), bellOfTeleportation );
+            if ( bellOfTeleportation.getUuid() != null )
+            {
+                this.uuidBellsOfTeleportationMap.put( bellOfTeleportation.getUuid(), bellOfTeleportation );
+            }
         }
-
-        if( bellOfTeleportation.getBellOfTeleportationItemStack() != null )
-        {
-            this.itemStackBellOfTeleportationMap.put( bellOfTeleportation.getBellOfTeleportationItemStack(), bellOfTeleportation );
-        }
-
-        if( bellOfTeleportation.getUuid() != null )
-        {
-            this.uuidBellsOfTeleportationMap.put( bellOfTeleportation.getUuid(), bellOfTeleportation );
-        }
-    }
-
-    public void updateBellOfTeleportationMappings( BellOfTeleportation bellOfTeleportation )
-    {
-        this.addBellOfTeleportation( bellOfTeleportation );
 
         this.serializeBellOfTeleportationMappings();
     }

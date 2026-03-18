@@ -8,4 +8,5 @@ public class MinecraftAiConstants
     public static final String ARCHER = "Archer";
 
     public static final String BELLS_OF_TELEPORTATION = "Bells of Teleportation";
+    public static final String BELLS_OF_TELEPORTATION_UUID_FIELD = "bell-of-teleportation-uuid";
 }

@@ -5,6 +5,7 @@ import com.cgms.minecraft.spigot.util.BellOfTeleportationUtil;
 import com.cgms.minecraft.spigot.util.MinecraftAiConstants;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,15 +55,18 @@ public class MagicItemsGuiCommand implements CommandExecutor
         // Create item meta data for the Bell of Teleportation ItemStack
         ItemMeta bellOfTeleportationButtonMeta = bellOfTeleportationItemStack.getItemMeta();
 
-        // Set the display name of the Bell of Teleportation ItemStack
-        bellOfTeleportationButtonMeta.setDisplayName( MinecraftAiConstants.BELLS_OF_TELEPORTATION );
-
-        // Set metadata for the Bell of Teleportation ItemStack
-        bellOfTeleportationItemStack.setItemMeta( bellOfTeleportationButtonMeta );
-
         // Create BellOfTeleportation object to track usage, entanglement, and other stuff
         BellOfTeleportation bellOfTeleportation = new BellOfTeleportation();
         bellOfTeleportation.setBellOfTeleportationItemStack( bellOfTeleportationItemStack );
+
+        // Set the display name of the Bell of Teleportation ItemStack
+        bellOfTeleportationButtonMeta.setDisplayName( MinecraftAiConstants.BELLS_OF_TELEPORTATION );
+        bellOfTeleportationButtonMeta.getPersistentDataContainer().set( NamespacedKey.minecraft( MinecraftAiConstants.BELLS_OF_TELEPORTATION_UUID_FIELD ),
+                PersistentDataType.STRING, bellOfTeleportation.getUuid()
+        );
+
+        // Set metadata for the Bell of Teleportation ItemStack
+        bellOfTeleportationItemStack.setItemMeta( bellOfTeleportationButtonMeta );
 
         LOGGER.debug( "Creating Bell of Teleportation with UUID {}.", bellOfTeleportation.getUuid() );
 
@@ -71,17 +76,20 @@ public class MagicItemsGuiCommand implements CommandExecutor
         // Create item metadata for the entangled Bell of Teleportation ItemStack
         ItemMeta entangledBellOfTeleportationButtonMeta = entangledBellOfTeleportationItemStack.getItemMeta();
 
-        // Set the display name of the entangled Bell of Teleportation ItemStack
-        entangledBellOfTeleportationButtonMeta.setDisplayName( "Entangled-" + MinecraftAiConstants.BELLS_OF_TELEPORTATION );
-
-        // Set metadata for the entangled Bell of Teleportation ItemStack
-        entangledBellOfTeleportationItemStack.setItemMeta( entangledBellOfTeleportationButtonMeta );
-
         // Create BellOfTeleportation object for the entangled bell to track usage, entanglement, and other stuff
         BellOfTeleportation entangledBellOfTeleportation = new BellOfTeleportation();
         entangledBellOfTeleportation.setBellOfTeleportationItemStack( entangledBellOfTeleportationItemStack );
 
         LOGGER.debug( "Creating entangled Bell of Teleportation with UUID {}.", entangledBellOfTeleportation.getUuid() );
+
+        // Set the display name of the entangled Bell of Teleportation ItemStack
+        entangledBellOfTeleportationButtonMeta.setDisplayName( "Entangled-" + MinecraftAiConstants.BELLS_OF_TELEPORTATION );
+        entangledBellOfTeleportationButtonMeta.getPersistentDataContainer().set( NamespacedKey.minecraft( MinecraftAiConstants.BELLS_OF_TELEPORTATION_UUID_FIELD ),
+                PersistentDataType.STRING, entangledBellOfTeleportation.getUuid()
+        );
+
+        // Set metadata for the entangled Bell of Teleportation ItemStack
+        entangledBellOfTeleportationItemStack.setItemMeta( entangledBellOfTeleportationButtonMeta );
 
         // Entangle the Bell of Teleportation objects to enable teleportation
         entangledBellOfTeleportation.setEntangledBellOfTeleportation( bellOfTeleportation );
@@ -90,9 +98,7 @@ public class MagicItemsGuiCommand implements CommandExecutor
         LOGGER.debug( "Setting entangled relationship between Bell of Teleportation {} and {}.", bellOfTeleportation.getUuid(), entangledBellOfTeleportation.getUuid() );
 
         // Add the bells to the BellOfTeleportationUtil for tracking and easy lookup
-        BellOfTeleportationUtil.getInstance().addBellOfTeleportation( bellOfTeleportation );
-        BellOfTeleportationUtil.getInstance().addBellOfTeleportation( entangledBellOfTeleportation );
-        BellOfTeleportationUtil.getInstance().updateBellOfTeleportationMappings( bellOfTeleportation );
+        BellOfTeleportationUtil.getInstance().updateBellOfTeleportationMappings( bellOfTeleportation, entangledBellOfTeleportation );
 
         //Set the GUI menus inventory
         inventory.setItem( 1, bellOfTeleportationItemStack );

@@ -88,6 +88,11 @@ public class BellOfTeleportation implements Serializable
         this.bellOfTeleportationBlock = new BellOfTeleportationBlock( world.getName(), x, y, z );
     }
 
+    public void clearLocationOfPlacedBell( )
+    {
+        this.bellOfTeleportationBlock = null;
+    }
+
     public BellOfTeleportation getEntangledBellOfTeleportation()
     {
         return entangledBellOfTeleportation;
@@ -108,7 +113,7 @@ public class BellOfTeleportation implements Serializable
         this.bellOfTeleportationBlock = bellOfTeleportationBlock;
     }
 
-    public void setBellOfTeleportationBlock( Block bellOfTeleportationBlock )
+    public void setBellOfTeleportationBlockFromSpigotBlock( Block bellOfTeleportationBlock )
     {
         this.bellOfTeleportationBlock = new BellOfTeleportationBlock( bellOfTeleportationBlock );
     }

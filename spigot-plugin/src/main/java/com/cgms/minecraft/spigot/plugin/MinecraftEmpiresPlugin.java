@@ -17,12 +17,6 @@ import javax.jms.JMSException;
 public class MinecraftEmpiresPlugin extends JavaPlugin
 {
     private static final Logger LOGGER = LoggerFactory.getLogger( MinecraftEmpiresPlugin.class.getName() );
-
-
-    private String mqttBrokerUrl;
-    private String mqttUsername;
-    private String mqttPassword;
-
     private ActiveMqConnectionManager activeMqConnectionManager;
 
     @Override
@@ -30,14 +24,14 @@ public class MinecraftEmpiresPlugin extends JavaPlugin
     {
         try
         {
-            // Initialization logic here
             PluginManager pluginManager = getServer().getPluginManager();
             pluginManager.registerEvents( new NpcNavigationCompleteListener(), this );
             pluginManager.registerEvents( new NpcSpawnItemDroppedListener(), this );
-            //pluginManager.registerEvents( new BellsOfTeleportationItemDroppedListener(), this );
             pluginManager.registerEvents( new BellOfTeleportationBlockBreakListener( this ), this );
             pluginManager.registerEvents( new BellOfTeleportationBlockPlacedListener( this ), this );
             pluginManager.registerEvents( new BellOfTeleportationRingListener( this ), this );
+            pluginManager.registerEvents( new BellOfTeleportationPickedUpListener( this ), this );
+            pluginManager.registerEvents( new BellOfTeleportationOnBlockDropListener( this ), this );
             pluginManager.registerEvents( new GuiListener(), this );
 
 
@@ -45,7 +39,8 @@ public class MinecraftEmpiresPlugin extends JavaPlugin
             this.getCommand( "magic-gui" ).setExecutor( new MagicItemsGuiCommand( this ) );
 
             // Start the ActiveMQ connection manager
-            ActiveMqConnectionManager.getInstance().start();
+            this.activeMqConnectionManager = ActiveMqConnectionManager.getInstance();
+            this.activeMqConnectionManager.start();
 
             SchedulerFactory sf = new StdSchedulerFactory();
             Scheduler scheduler = sf.getScheduler();

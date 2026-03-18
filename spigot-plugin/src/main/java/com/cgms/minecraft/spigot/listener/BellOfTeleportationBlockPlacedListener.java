@@ -2,12 +2,16 @@ package com.cgms.minecraft.spigot.listener;
 
 import com.cgms.minecraft.spigot.item.BellOfTeleportation;
 import com.cgms.minecraft.spigot.util.BellOfTeleportationUtil;
+import com.cgms.minecraft.spigot.util.MinecraftAiConstants;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.block.Bell;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,49 +32,32 @@ public class BellOfTeleportationBlockPlacedListener implements Listener
     {
         if (event.getBlockPlaced().getType() == Material.BELL)
         {
-            LOGGER.info( "Block placed event caught for Bell." );
+            LOGGER.debug( "Block placed event caught for Bell." );
 
             ItemStack placedItem = event.getItemInHand();
             Block placedBlock = event.getBlockPlaced();
+            Bell bellState = (Bell) placedBlock.getState();
+
             BellOfTeleportationUtil bellOfTeleportationUtil = BellOfTeleportationUtil.getInstance();
 
-            LOGGER.info( "Finding Bell of Teleportation based on ItemStack." );
-            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.getBellOfTeleportationByItemStack( placedItem );
+            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.getBellOfTeleportationUUIDFromPersistentDataContainer(
+                    placedItem.getItemMeta().getPersistentDataContainer()
+            );
 
-            if( bellOfTeleportation != null )
+            if ( bellOfTeleportation != null )
             {
-                LOGGER.info( "Bell of teleportation found {}.", bellOfTeleportation.getUuid() );
+                LOGGER.debug( "Bell of teleportation found {}.", bellOfTeleportation.getUuid() );
 
-                bellOfTeleportation.setBellOfTeleportationBlock( placedBlock );
+                bellOfTeleportation.setBellOfTeleportationBlockFromSpigotBlock( placedBlock );
                 bellOfTeleportationUtil.updateBellOfTeleportationMappings( bellOfTeleportation );
 
-                if( bellOfTeleportation.getEntangledBellOfTeleportation() == null )
-                {
-                    LOGGER.info( "Bell of teleportation has no entangled bell." );
-                } else
-                {
-                    LOGGER.info( "Bell of teleportation has entangled bell {}.", bellOfTeleportation.getEntangledBellOfTeleportation().getUuid() );
-                }
+                bellState.getPersistentDataContainer().set(
+                        NamespacedKey.minecraft( MinecraftAiConstants.BELLS_OF_TELEPORTATION_UUID_FIELD ),
+                        PersistentDataType.STRING, bellOfTeleportation.getUuid()
+                );
 
-
-            } else
-            {
-                LOGGER.info( "Bell of teleportation not found." );
+                bellState.update();
             }
-
-//            ItemStack[] playerInventoryItemArray = event.getPlayer().getInventory().getContents();
-//            for ( ItemStack playerInventoryItem : playerInventoryItemArray )
-//            {
-//                if ( playerInventoryItem != null && playerInventoryItem.getType() == Material.BELL )
-//                {
-//                    LOGGER.info( "Found Bell in player inventory." );
-//                    if ( placedItem.equals( playerInventoryItem ) )
-//                    {
-//                        LOGGER.info( "Found matching Bell in player inventory." );
-//                        break;
-//                    }
-//                }
-//            }
         }
     }
 

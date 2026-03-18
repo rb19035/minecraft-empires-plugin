@@ -2,6 +2,7 @@ package com.cgms.minecraft.spigot.listener;
 
 import com.cgms.minecraft.spigot.item.BellOfTeleportation;
 import com.cgms.minecraft.spigot.util.BellOfTeleportationUtil;
+import org.bukkit.block.Bell;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -15,7 +16,7 @@ import org.slf4j.Logger;
 public class BellOfTeleportationRingListener implements Listener
 {
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger( BellOfTeleportationRingListener.class );
-    private Plugin plugin;
+    private final Plugin plugin;
 
     public BellOfTeleportationRingListener( Plugin plugin )
     {
@@ -27,41 +28,40 @@ public class BellOfTeleportationRingListener implements Listener
     {
         Entity ringer = event.getEntity();
 
-        LOGGER.info( "Bell ringing event caught." );
+        LOGGER.debug( "Bell ringing event caught." );
 
         if ( ringer instanceof Player player )
         {
-            LOGGER.info( "Player rang bell." );
+            LOGGER.debug( "Player rang bell." );
 
             Block block = event.getBlock();
+            Bell bellState = (Bell) block.getState();
 
             BellOfTeleportationUtil bellOfTeleportationUtil = BellOfTeleportationUtil.getInstance();
 
-            LOGGER.info( "Finding Bell of Teleportation based on block." );
+            LOGGER.debug( "Finding Bell of Teleportation based on block." );
 
-            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.getBellOfTeleportationByBlock( block );
+            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.getBellOfTeleportationUUIDFromPersistentDataContainer( bellState.getPersistentDataContainer() );
 
             if ( bellOfTeleportation != null )
             {
-                LOGGER.info( "Bell of teleportation found {}.", bellOfTeleportation.getUuid() );
-
-                LOGGER.info( "Bell of Teleportation entangled with UUID {}.", bellOfTeleportation.getEntangledBellOfTeleportation().getUuid() );
-
-                LOGGER.info( "Bell of Teleportation entangled with Block {}.", bellOfTeleportation.getEntangledBellOfTeleportation().getBellOfTeleportationBlock() );
+                LOGGER.debug( "Bell of teleportation found {}.", bellOfTeleportation.getUuid() );
 
                 if ( bellOfTeleportation.canTeleport() )
                 {
-                    LOGGER.info( "Teleporting player to entangled bell location {}.",
-                            bellOfTeleportation.getEntangledBellOfTeleportation().getSpigotLocationOfPlacedBell() );
+                    LOGGER.debug( "Teleporting player to entangled bell location {}.",
+                                 bellOfTeleportation.getEntangledBellOfTeleportation().getSpigotLocationOfPlacedBell()
+                    );
+
                     player.teleport( bellOfTeleportation.getEntangledBellOfTeleportation().getSpigotLocationOfPlacedBell() );
 
                 } else
                 {
-                    LOGGER.info( "Bell of teleportation cannot be teleported to." );
+                    LOGGER.debug( "Bell of teleportation cannot be teleported to." );
                 }
             } else
             {
-                LOGGER.info( "Bell of teleportation not found." );
+                LOGGER.debug( "Bell of teleportation not found." );
             }
         }
     }
