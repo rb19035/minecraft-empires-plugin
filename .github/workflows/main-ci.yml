@@ -29,9 +29,9 @@ jobs:
       - name: Spigot Jar File Upload
         uses: jakejarvis/s3-sync-action@master
         env:
-          AWS_S3_BUCKET: ${{secrets.AWS_S3_DOJO_BUCKET}}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_MINECRAFT_EMPIRES_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_MINECRAFT_EMPIRES_ARTIFACT_UPLOAD }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_SECRET_MINECRAFT_EMPIRES_ARTIFACT_UPLOAD }}
           AWS_REGION: 'us-east-1'
           SOURCE_DIR: 'spigot-plugin/target/*.jar'
 
