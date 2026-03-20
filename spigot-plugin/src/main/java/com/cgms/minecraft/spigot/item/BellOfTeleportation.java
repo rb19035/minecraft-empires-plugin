@@ -1,11 +1,12 @@
 package com.cgms.minecraft.spigot.item;
 
 import com.cgms.minecraft.spigot.util.MinecraftAiConstants;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,7 +16,9 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-
+@JsonIdentityInfo (
+        generator = ObjectIdGenerators.UUIDGenerator.class,
+        property = "ObjectID")
 public class BellOfTeleportation implements Serializable
 {
     private static final long serialVersionUID = 1L;
@@ -23,7 +26,6 @@ public class BellOfTeleportation implements Serializable
     private String uuid;
     private BellOfTeleportation entangledBellOfTeleportation;
     private BellOfTeleportationBlock bellOfTeleportationBlock;
-    private BellOfTeleportationItemStack bellOfTeleportationItemStack;
 
 
     public BellOfTeleportation()
@@ -61,7 +63,7 @@ public class BellOfTeleportation implements Serializable
         this.uuid = uuid;
     }
 
-    public Location getSpigotLocationOfPlacedBell()
+    public Location determineSpigotLocationOfPlacedBell()
     {
         if( this.bellOfTeleportationBlock != null)
         {
@@ -70,33 +72,21 @@ public class BellOfTeleportation implements Serializable
             );
         }
 
-        if( this.bellOfTeleportationItemStack != null )
-        {
-            return null;
-        }
-
         return null;
     }
 
-    public void setLocationOfPlacedBell( Location location )
-    {
-        this.setLocationOfPlacedBell( location.getWorld(), location.getX(), location.getY(), location.getZ() );
-    }
-
-    public void setLocationOfPlacedBell( @NonNull World world, double x, double y, double z )
-    {
-        this.bellOfTeleportationBlock = new BellOfTeleportationBlock( world.getName(), x, y, z );
-    }
 
     public void clearLocationOfPlacedBell( )
     {
         this.bellOfTeleportationBlock = null;
     }
 
+
     public BellOfTeleportation getEntangledBellOfTeleportation()
     {
         return entangledBellOfTeleportation;
     }
+
 
     public void setEntangledBellOfTeleportation( BellOfTeleportation entangledBellOfTeleportation )
     {
@@ -113,24 +103,9 @@ public class BellOfTeleportation implements Serializable
         this.bellOfTeleportationBlock = bellOfTeleportationBlock;
     }
 
-    public void setBellOfTeleportationBlockFromSpigotBlock( Block bellOfTeleportationBlock )
+    public void configureBellOfTeleportationBlockFromSpigotBlock( Block bellOfTeleportationBlock )
     {
         this.bellOfTeleportationBlock = new BellOfTeleportationBlock( bellOfTeleportationBlock );
-    }
-
-    public BellOfTeleportationItemStack getBellOfTeleportationItemStack()
-    {
-        return bellOfTeleportationItemStack;
-    }
-
-    public void setBellOfTeleportationItemStack( BellOfTeleportationItemStack bellOfTeleportationItemStack )
-    {
-        this.bellOfTeleportationItemStack = bellOfTeleportationItemStack;
-    }
-
-    public void setBellOfTeleportationItemStack( ItemStack bellOfTeleportationItemStack )
-    {
-        this.bellOfTeleportationItemStack = new BellOfTeleportationItemStack( bellOfTeleportationItemStack.hashCode() );
     }
 
     @Transient
@@ -153,12 +128,13 @@ public class BellOfTeleportation implements Serializable
 
         BellOfTeleportation that = (BellOfTeleportation) o;
 
-        return Objects.equals( uuid, that.uuid ) && Objects.equals( entangledBellOfTeleportation, that.entangledBellOfTeleportation ) && Objects.equals( bellOfTeleportationBlock, that.bellOfTeleportationBlock ) && Objects.equals( bellOfTeleportationItemStack, that.bellOfTeleportationItemStack );
+        return Objects.equals( uuid, that.uuid ) && Objects.equals( entangledBellOfTeleportation, that.entangledBellOfTeleportation ) &&
+                Objects.equals( bellOfTeleportationBlock, that.bellOfTeleportationBlock );
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash( uuid, entangledBellOfTeleportation, bellOfTeleportationBlock, bellOfTeleportationItemStack );
+        return Objects.hash( uuid, entangledBellOfTeleportation, bellOfTeleportationBlock );
     }
 }

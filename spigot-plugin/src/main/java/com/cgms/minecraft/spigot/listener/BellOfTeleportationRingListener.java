@@ -41,7 +41,7 @@ public class BellOfTeleportationRingListener implements Listener
 
             LOGGER.debug( "Finding Bell of Teleportation based on block." );
 
-            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.getBellOfTeleportationUUIDFromPersistentDataContainer( bellState.getPersistentDataContainer() );
+            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.retrieveBellOfTeleportationUUIDFromPersistentDataContainer( bellState.getPersistentDataContainer() );
 
             if ( bellOfTeleportation != null )
             {
@@ -50,10 +50,10 @@ public class BellOfTeleportationRingListener implements Listener
                 if ( bellOfTeleportation.canTeleport() )
                 {
                     LOGGER.debug( "Teleporting player to entangled bell location {}.",
-                                 bellOfTeleportation.getEntangledBellOfTeleportation().getSpigotLocationOfPlacedBell()
+                                 bellOfTeleportation.getEntangledBellOfTeleportation().determineSpigotLocationOfPlacedBell()
                     );
 
-                    player.teleport( bellOfTeleportation.getEntangledBellOfTeleportation().getSpigotLocationOfPlacedBell() );
+                    player.teleport( bellOfTeleportation.getEntangledBellOfTeleportation().determineSpigotLocationOfPlacedBell() );
 
                 } else
                 {

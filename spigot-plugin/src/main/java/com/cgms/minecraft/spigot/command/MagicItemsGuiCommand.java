@@ -57,7 +57,6 @@ public class MagicItemsGuiCommand implements CommandExecutor
 
         // Create BellOfTeleportation object to track usage, entanglement, and other stuff
         BellOfTeleportation bellOfTeleportation = new BellOfTeleportation();
-        bellOfTeleportation.setBellOfTeleportationItemStack( bellOfTeleportationItemStack );
 
         // Set the display name of the Bell of Teleportation ItemStack
         bellOfTeleportationButtonMeta.setDisplayName( MinecraftAiConstants.BELLS_OF_TELEPORTATION );
@@ -78,7 +77,6 @@ public class MagicItemsGuiCommand implements CommandExecutor
 
         // Create BellOfTeleportation object for the entangled bell to track usage, entanglement, and other stuff
         BellOfTeleportation entangledBellOfTeleportation = new BellOfTeleportation();
-        entangledBellOfTeleportation.setBellOfTeleportationItemStack( entangledBellOfTeleportationItemStack );
 
         LOGGER.debug( "Creating entangled Bell of Teleportation with UUID {}.", entangledBellOfTeleportation.getUuid() );
 

@@ -35,7 +35,7 @@ public class BellOfTeleportationPickedUpListener implements Listener
             ItemStack itemStack = event.getItem().getItemStack();
 
             BellOfTeleportationUtil bellOfTeleportationUtil = BellOfTeleportationUtil.getInstance();
-            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.getBellOfTeleportationUUIDFromPersistentDataContainer( itemStack.getItemMeta().getPersistentDataContainer() );
+            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.retrieveBellOfTeleportationUUIDFromPersistentDataContainer( itemStack.getItemMeta().getPersistentDataContainer() );
 
             if( bellOfTeleportation != null )
             {

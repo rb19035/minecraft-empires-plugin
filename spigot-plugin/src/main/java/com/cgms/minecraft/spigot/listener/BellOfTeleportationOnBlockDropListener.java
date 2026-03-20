@@ -38,7 +38,7 @@ public class BellOfTeleportationOnBlockDropListener implements Listener
             LOGGER.debug( "Bell drop detected. Checking if it was a Bell of Teleportation." );
 
             BellOfTeleportationUtil bellOfTeleportationUtil = BellOfTeleportationUtil.getInstance();
-            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.getBellOfTeleportationUUIDFromPersistentDataContainer( bellState.getPersistentDataContainer() );
+            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.retrieveBellOfTeleportationUUIDFromPersistentDataContainer( bellState.getPersistentDataContainer() );
 
             if ( bellOfTeleportation != null )
             {

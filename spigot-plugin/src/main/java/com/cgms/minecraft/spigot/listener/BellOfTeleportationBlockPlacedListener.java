@@ -40,7 +40,7 @@ public class BellOfTeleportationBlockPlacedListener implements Listener
 
             BellOfTeleportationUtil bellOfTeleportationUtil = BellOfTeleportationUtil.getInstance();
 
-            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.getBellOfTeleportationUUIDFromPersistentDataContainer(
+            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.retrieveBellOfTeleportationUUIDFromPersistentDataContainer(
                     placedItem.getItemMeta().getPersistentDataContainer()
             );
 
@@ -48,7 +48,7 @@ public class BellOfTeleportationBlockPlacedListener implements Listener
             {
                 LOGGER.debug( "Bell of teleportation found {}.", bellOfTeleportation.getUuid() );
 
-                bellOfTeleportation.setBellOfTeleportationBlockFromSpigotBlock( placedBlock );
+                bellOfTeleportation.configureBellOfTeleportationBlockFromSpigotBlock( placedBlock );
                 bellOfTeleportationUtil.updateBellOfTeleportationMappings( bellOfTeleportation );
 
                 bellState.getPersistentDataContainer().set(
