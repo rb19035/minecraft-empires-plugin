@@ -1,7 +1,7 @@
 logging:
   level:
     root: ERROR
-    com.cgms: DEBUG
+    com.cgms: ERROR
 spring:
   server: 2224
   activemq:
