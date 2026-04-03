@@ -26,67 +26,74 @@ public class NpcFactory
     public static NPC spawnNPC( @NonNull Location location, @NonNull String npcType, @NonNull Player player, String name )
     {
         NPC npc = CitizensAPI.getNPCRegistry().createNPC( EntityType.PLAYER, name);
+        npc.spawn( location );
 
         npc.setFlyable( false );
         npc.setProtected( false );
 
-        SentinelTrait sentry = npc.getOrAddTrait(SentinelTrait.class);
-        npc.spawn( location );
-        sentry.fightback = true;
+        Equipment equipment = npc.getOrAddTrait( Equipment.class );
+        Inventory npcInventoryTrait = npc.getOrAddTrait(Inventory.class);
+        SentinelTrait sentinelTrait = npc.getOrAddTrait( SentinelTrait.class );
+        sentinelTrait.fightback = true;
+        sentinelTrait.invincible = false;
+        sentinelTrait.allowKnockback = true;
+        sentinelTrait.addTarget( "monsters" );
+        sentinelTrait.addTarget( "entity:pillager" );
 
         if( npcType.equalsIgnoreCase( MinecraftAiConstants.ARMORED_KNIGHT ) )
         {
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.IRON_BOOTS, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.IRON_HELMET, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.IRON_CHESTPLATE, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.IRON_LEGGINGS, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.IRON_SWORD, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.OFF_HAND, new ItemStack( Material.SHIELD, 1 ) );
+            npc.setName( MinecraftAiConstants.ARMORED_KNIGHT + " For "+ player.getName() );
 
-            LOGGER.debug( "Spawned NPC Type:" + MinecraftAiConstants.ARMORED_KNIGHT );
+            equipment.set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.IRON_SWORD ) );
+            equipment.set( Equipment.EquipmentSlot.OFF_HAND, new ItemStack( Material.SHIELD ) );
+            equipment.set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.IRON_BOOTS ) );
+            equipment.set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.IRON_HELMET ) );
+            equipment.set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.IRON_CHESTPLATE ) );
+            equipment.set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.IRON_LEGGINGS ) );
+
+            LOGGER.debug( "Creating NPC Type:" + MinecraftAiConstants.ARMORED_KNIGHT );
 
         } else if ( npcType.equalsIgnoreCase( MinecraftAiConstants.ARCHER ) )
         {
-            // Added standard archer equipment
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.LEATHER_BOOTS, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.IRON_HELMET, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.LEATHER_CHESTPLATE, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.LEATHER_LEGGINGS, 1 ) );
+            npc.setName( MinecraftAiConstants.ARCHER + " For "+ player.getName() );
+            equipment.set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.BOW ) );
+            equipment.set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.LEATHER_BOOTS ) );
+            equipment.set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.CHAINMAIL_HELMET ) );
+            equipment.set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.LEATHER_CHESTPLATE ) );
+            equipment.set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.LEATHER_LEGGINGS ) );
 
-            // Add arrows to the NPC's inventory.
-            Inventory npcInventoryTrait = npc.getOrAddTrait(Inventory.class);
-            org.bukkit.inventory.Inventory bukkitInventory = npcInventoryTrait.getInventoryView();
+            // Add arrows to the NPC's inventory
             for ( int i = 9; i < 18; i++ )
             {
-                bukkitInventory.setItem( i, new ItemStack( Material.ARROW, 64) );
+                npcInventoryTrait.setItem( i, new ItemStack( Material.ARROW, 64) );
             }
 
-            LOGGER.debug( "Spawned NPC Type:" + MinecraftAiConstants.ARCHER );
+            LOGGER.debug( "Creating NPC Type:" + MinecraftAiConstants.ARCHER );
 
         } else if ( npcType.equalsIgnoreCase( MinecraftAiConstants.BODYGUARD ) )
         {
             // Set NPC to guard player that created it.
-            sentry.setGuarding( player.getUniqueId() );
+            sentinelTrait.setGuarding( player.getUniqueId() );
+            npc.setName( MinecraftAiConstants.BODYGUARD + " For "+ player.getName() );
+            equipment.set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.IRON_SWORD ) );
+            equipment.set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.IRON_BOOTS ) );
+            equipment.set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.GOLDEN_HELMET ) );
+            equipment.set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.GOLDEN_CHESTPLATE ) );
+            equipment.set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.IRON_LEGGINGS ) );
 
-            // Added standard bodyguard equipment
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.CHAINMAIL_BOOTS, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.CHAINMAIL_HELMET, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.GOLDEN_CHESTPLATE, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.IRON_LEGGINGS, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.IRON_SWORD, 1 ) );
-
-            LOGGER.debug( "Spawned NPC Type:" + MinecraftAiConstants.BODYGUARD );
-            LOGGER.info( "Guarding player ID: " + player.getUniqueId() );
+            LOGGER.debug( "Creating NPC Type:" + MinecraftAiConstants.BODYGUARD );
 
         } else if ( npcType.equalsIgnoreCase( MinecraftAiConstants.FOOT_SOLDIER ) )
         {
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.CHAINMAIL_BOOTS, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.CHAINMAIL_HELMET, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.CHAINMAIL_CHESTPLATE, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.CHAINMAIL_LEGGINGS, 1 ) );
-            npc.getOrAddTrait( Equipment.class ).set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.IRON_SWORD, 1 ) );
+            npc.setName( MinecraftAiConstants.FOOT_SOLDIER + " For "+ player.getName() );
 
-            LOGGER.debug( "Spawned NPC Type:" + MinecraftAiConstants.FOOT_SOLDIER );
+            equipment.set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.IRON_SWORD ) );
+            equipment.set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.IRON_BOOTS ) );
+            equipment.set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.COPPER_HELMET ) );
+            equipment.set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.COPPER_CHESTPLATE ) );
+            equipment.set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.IRON_LEGGINGS ) );
+
+            LOGGER.debug( "Creating NPC Type:" + MinecraftAiConstants.FOOT_SOLDIER );
         }
 
         // Get the Owner trait and set the owner

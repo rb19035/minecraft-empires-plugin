@@ -5,6 +5,7 @@ import com.cgms.minecraft.spigot.command.MagicItemsGuiCommand;
 import com.cgms.minecraft.spigot.command.NpcGuiCommand;
 import com.cgms.minecraft.spigot.listener.*;
 import com.cgms.minecraft.spigot.schedule.job.AiServerHeartbeatJob;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.quartz.*;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.jms.JMSException;
 
-public class MinecraftEmpiresPlugin extends JavaPlugin
+public class MinecraftEmpiresPlugin extends JavaPlugin implements Listener
 {
     private static final Logger LOGGER = LoggerFactory.getLogger( MinecraftEmpiresPlugin.class.getName() );
     private ActiveMqConnectionManager activeMqConnectionManager;
@@ -33,6 +34,7 @@ public class MinecraftEmpiresPlugin extends JavaPlugin
             pluginManager.registerEvents( new BellOfTeleportationPickedUpListener( this ), this );
             pluginManager.registerEvents( new BellOfTeleportationOnBlockDropListener( this ), this );
             pluginManager.registerEvents( new GuiListener(), this );
+            pluginManager.registerEvents( new NpcSpawnListener(), this );
 
 
             this.getCommand( "npc-gui" ).setExecutor( new NpcGuiCommand() );
@@ -73,8 +75,6 @@ public class MinecraftEmpiresPlugin extends JavaPlugin
         }
     }
 
-
-
     @Override
     public void onDisable()
     {
@@ -84,4 +84,6 @@ public class MinecraftEmpiresPlugin extends JavaPlugin
         }
         LOGGER.info("Minecraft Empires Plugin has been disabled!");
     }
+
+
 }
