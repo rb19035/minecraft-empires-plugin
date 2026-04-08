@@ -8,6 +8,7 @@ package com.cgms.minecraft.spigot.command;
 
 import com.cgms.minecraft.spigot.item.BellOfTeleportation;
 import com.cgms.minecraft.spigot.item.BellOfTeleportationManager;
+import com.cgms.minecraft.spigot.item.Building;
 import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -25,22 +26,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class MagicItemsGuiCommand implements CommandExecutor
+public class AdminBuildingGuiCommand implements CommandExecutor
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger( MagicItemsGuiCommand.class.getName() );
+    private static final Logger LOGGER = LoggerFactory.getLogger( AdminBuildingGuiCommand.class.getName() );
+    private static final String INVENTORY_MENU_TITLE = "Admin Building Menu";
     private final Plugin plugin;
 
-    public MagicItemsGuiCommand( Plugin plugin )
+    public AdminBuildingGuiCommand( Plugin plugin )
     {
         this.plugin = plugin;
     }
 
 
-
     @Override
     public boolean onCommand( CommandSender commandSender, Command command, String s, String[] strings )
     {
-        LOGGER.debug( "MagicItemsGuiCommand fired." );
+        LOGGER.debug( "AdminBuildingGuiCommand fired." );
 
         if( ! (commandSender instanceof Player) )
         {
@@ -49,24 +50,26 @@ public class MagicItemsGuiCommand implements CommandExecutor
             return false;
         }
 
-        // Get the player that sent the command
+
         Player player = (Player) commandSender;
 
-        // Create the inventory for the GUI
-        Inventory inventory = Bukkit.createInventory( player, 9*3, "Empires Magic Items Menu" );
+        Inventory inventory = Bukkit.createInventory( player, 9*3, INVENTORY_MENU_TITLE );
+        ItemStack buildingItemStack = new ItemStack( Material.WHITE_BANNER );
 
-        // Create the Bell of Teleportation ItemStacks for the GUI menu
-        ItemStack bellOfTeleportationItemStack = new ItemStack( Material.BELL );
+        Building building = new Building();
 
-        // Create item meta data for the Bell of Teleportation ItemStack
-        ItemMeta bellOfTeleportationButtonMeta = bellOfTeleportationItemStack.getItemMeta();
+        ItemMeta buildingButtonMeta = buildingItemStack.getItemMeta();
+        buildingButtonMeta.setDisplayName( MinecraftEmpiresConstants.BELLS_OF_TELEPORTATION );
+        buildingButtonMeta.getPersistentDataContainer().set( NamespacedKey.minecraft( MinecraftEmpiresConstants.BELLS_OF_TELEPORTATION_UUID_FIELD ),
+                PersistentDataType.STRING, building.getUuid()
+        );
 
         // Create BellOfTeleportation object to track usage, entanglement, and other stuff
         BellOfTeleportation bellOfTeleportation = new BellOfTeleportation();
 
-        // Set the display name of the Bell of Teleportation ItemStack
-        bellOfTeleportationButtonMeta.setDisplayName( MinecraftEmpiresConstants.BELLS_OF_TELEPORTATION );
-        bellOfTeleportationButtonMeta.getPersistentDataContainer().set( NamespacedKey.minecraft( MinecraftEmpiresConstants.BELLS_OF_TELEPORTATION_UUID_FIELD ),
+
+        buildingButtonMeta.setDisplayName( MinecraftEmpiresConstants.BELLS_OF_TELEPORTATION );
+        buildingButtonMeta.getPersistentDataContainer().set( NamespacedKey.minecraft( MinecraftEmpiresConstants.BELLS_OF_TELEPORTATION_UUID_FIELD ),
                 PersistentDataType.STRING, bellOfTeleportation.getUuid()
         );
 

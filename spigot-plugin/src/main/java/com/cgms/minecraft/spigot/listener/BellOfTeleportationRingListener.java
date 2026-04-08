@@ -1,7 +1,13 @@
+/*
+ * Copyright (c) 2026
+ * SPDX-License-Identifier: MIT
+ * The Cow Goes Moo Software (TCGMS)
+ */
+
 package com.cgms.minecraft.spigot.listener;
 
 import com.cgms.minecraft.spigot.item.BellOfTeleportation;
-import com.cgms.minecraft.spigot.util.BellOfTeleportationUtil;
+import com.cgms.minecraft.spigot.item.BellOfTeleportationManager;
 import org.bukkit.block.Bell;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -37,11 +43,11 @@ public class BellOfTeleportationRingListener implements Listener
             Block block = event.getBlock();
             Bell bellState = (Bell) block.getState();
 
-            BellOfTeleportationUtil bellOfTeleportationUtil = BellOfTeleportationUtil.getInstance();
+            BellOfTeleportationManager bellOfTeleportationManager = BellOfTeleportationManager.getInstance();
 
             LOGGER.debug( "Finding Bell of Teleportation based on block." );
 
-            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.retrieveBellOfTeleportationUUIDFromPersistentDataContainer( bellState.getPersistentDataContainer() );
+            BellOfTeleportation bellOfTeleportation = bellOfTeleportationManager.retrieveBellOfTeleportationUUIDFromPersistentDataContainer( bellState.getPersistentDataContainer() );
 
             if ( bellOfTeleportation != null )
             {

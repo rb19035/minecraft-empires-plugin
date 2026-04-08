@@ -1,6 +1,12 @@
+/*
+ * Copyright (c) 2026
+ * SPDX-License-Identifier: MIT
+ * The Cow Goes Moo Software (TCGMS)
+ */
+
 package com.cgms.minecraft.spigot.item;
 
-import com.cgms.minecraft.spigot.util.MinecraftAiConstants;
+import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.NonNull;
@@ -114,8 +120,8 @@ public class BellOfTeleportation implements Serializable
         ItemStack itemStack = new ItemStack( Material.BELL, 1 );
 
         ItemMeta bellMeta = itemStack.getItemMeta();
-        bellMeta.setItemName( MinecraftAiConstants.BELLS_OF_TELEPORTATION );
-        bellMeta.setDisplayName( MinecraftAiConstants.BELLS_OF_TELEPORTATION );
+        bellMeta.setItemName( MinecraftEmpiresConstants.BELLS_OF_TELEPORTATION );
+        bellMeta.setDisplayName( MinecraftEmpiresConstants.BELLS_OF_TELEPORTATION );
 
         return itemStack;
     }

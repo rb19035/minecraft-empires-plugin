@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2026
+ * SPDX-License-Identifier: MIT
+ * The Cow Goes Moo Software (TCGMS)
+ */
+
 package com.cgms.minecraft.spigot.plugin;
 
 import com.cgms.minecraft.messaging.ActiveMqConnectionManager;
@@ -35,6 +41,8 @@ public class MinecraftEmpiresPlugin extends JavaPlugin implements Listener
             pluginManager.registerEvents( new BellOfTeleportationOnBlockDropListener( this ), this );
             pluginManager.registerEvents( new GuiListener(), this );
             pluginManager.registerEvents( new NpcSpawnListener(), this );
+            pluginManager.registerEvents( new NpcDeathListener(), this );
+            pluginManager.registerEvents( new BlockPlacedListener(), this );
 
 
             this.getCommand( "npc-gui" ).setExecutor( new NpcGuiCommand() );
@@ -62,6 +70,7 @@ public class MinecraftEmpiresPlugin extends JavaPlugin implements Listener
             scheduler.start();
 
             LOGGER.info( "Minecraft Empires Plugin has been enabled!" );
+
 
         } catch ( JMSException jmse )
         {

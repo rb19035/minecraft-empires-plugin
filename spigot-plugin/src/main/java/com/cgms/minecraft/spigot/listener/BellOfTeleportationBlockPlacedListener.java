@@ -1,8 +1,14 @@
+/*
+ * Copyright (c) 2026
+ * SPDX-License-Identifier: MIT
+ * The Cow Goes Moo Software (TCGMS)
+ */
+
 package com.cgms.minecraft.spigot.listener;
 
 import com.cgms.minecraft.spigot.item.BellOfTeleportation;
-import com.cgms.minecraft.spigot.util.BellOfTeleportationUtil;
-import com.cgms.minecraft.spigot.util.MinecraftAiConstants;
+import com.cgms.minecraft.spigot.item.BellOfTeleportationManager;
+import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Bell;
@@ -38,9 +44,9 @@ public class BellOfTeleportationBlockPlacedListener implements Listener
             Block placedBlock = event.getBlockPlaced();
             Bell bellState = (Bell) placedBlock.getState();
 
-            BellOfTeleportationUtil bellOfTeleportationUtil = BellOfTeleportationUtil.getInstance();
+            BellOfTeleportationManager bellOfTeleportationManager = BellOfTeleportationManager.getInstance();
 
-            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.retrieveBellOfTeleportationUUIDFromPersistentDataContainer(
+            BellOfTeleportation bellOfTeleportation = bellOfTeleportationManager.retrieveBellOfTeleportationUUIDFromPersistentDataContainer(
                     placedItem.getItemMeta().getPersistentDataContainer()
             );
 
@@ -49,10 +55,10 @@ public class BellOfTeleportationBlockPlacedListener implements Listener
                 LOGGER.debug( "Bell of teleportation found {}.", bellOfTeleportation.getUuid() );
 
                 bellOfTeleportation.configureBellOfTeleportationBlockFromSpigotBlock( placedBlock );
-                bellOfTeleportationUtil.updateBellOfTeleportationMappings( bellOfTeleportation );
+                bellOfTeleportationManager.updateBellOfTeleportationMappings( bellOfTeleportation );
 
                 bellState.getPersistentDataContainer().set(
-                        NamespacedKey.minecraft( MinecraftAiConstants.BELLS_OF_TELEPORTATION_UUID_FIELD ),
+                        NamespacedKey.minecraft( MinecraftEmpiresConstants.BELLS_OF_TELEPORTATION_UUID_FIELD ),
                         PersistentDataType.STRING, bellOfTeleportation.getUuid()
                 );
 

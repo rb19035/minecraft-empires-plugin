@@ -1,14 +1,17 @@
+/*
+ * Copyright (c) 2026
+ * SPDX-License-Identifier: MIT
+ * The Cow Goes Moo Software (TCGMS)
+ */
+
 package com.cgms.minecraft.spigot.listener;
 
-import com.cgms.minecraft.spigot.util.MinecraftAiConstants;
+import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
+import com.cgms.minecraft.spigot.plugin.NpcFactory;
 import net.citizensnpcs.api.event.NPCSpawnEvent;
 import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.trait.Equipment;
-import net.citizensnpcs.api.trait.trait.Inventory;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 import org.slf4j.Logger;
 
 public class NpcSpawnListener implements Listener
@@ -22,82 +25,31 @@ public class NpcSpawnListener implements Listener
 
         if ( npc.getName() != null )
         {
-            if( npc.getName().contains( MinecraftAiConstants.ARMORED_KNIGHT ) )
+            if( npc.getName().contains( MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE ) )
             {
                 LOGGER.info( "Found Knight...Setting equipment." );
-                this.setNpcKnightEquipment( npc );
+                NpcFactory.setNpcKnightEquipment( npc );
             }
 
-            if( npc.getName().contains( MinecraftAiConstants.FOOT_SOLDIER ) )
+            if( npc.getName().contains( MinecraftEmpiresConstants.NPC_FOOT_SOLDIER_TYPE ) )
             {
                 LOGGER.info( "Found Foot Soldier...Setting equipment." );
-                this.setNpcFootSoldierEquipment( npc );
+                NpcFactory.setNpcFootSoldierEquipment( npc );
             }
 
-            if( npc.getName().contains( MinecraftAiConstants.BODYGUARD ) )
+            if( npc.getName().contains( MinecraftEmpiresConstants.NPC_BODYGUARD_TYPE ) )
             {
                 LOGGER.info( "Found Bodyguard...Setting equipment." );
-                this.setNpcBodyguardEquipment( npc );
+                NpcFactory.setNpcBodyguardEquipment( npc );
             }
 
-            if( npc.getName().contains( MinecraftAiConstants.ARCHER ) )
+            if( npc.getName().contains( MinecraftEmpiresConstants.NPC_ARCHER_TYPE ) )
             {
                 LOGGER.info( "Found Archer...Setting equipment." );
-                this.setNpcArcherEquipment( npc );
+                NpcFactory.setNpcArcherEquipment( npc );
             }
         }
     }
 
-    private void setNpcKnightEquipment( NPC npc )
-    {
-        Equipment equipment = npc.getOrAddTrait( Equipment.class );
-        Inventory npcInventoryTrait = npc.getOrAddTrait( Inventory.class );
 
-        equipment.set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.IRON_SWORD ) );
-        equipment.set( Equipment.EquipmentSlot.OFF_HAND, new ItemStack( Material.SHIELD ) );
-        equipment.set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.IRON_BOOTS ) );
-        equipment.set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.IRON_HELMET ) );
-        equipment.set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.IRON_CHESTPLATE ) );
-        equipment.set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.IRON_LEGGINGS ) );
-    }
-
-    private void setNpcArcherEquipment( NPC npc )
-    {
-        Equipment equipment = npc.getOrAddTrait( Equipment.class );
-        Inventory npcInventoryTrait = npc.getOrAddTrait( Inventory.class );
-
-        equipment.set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.BOW ) );
-        equipment.set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.LEATHER_BOOTS ) );
-        equipment.set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.CHAINMAIL_HELMET ) );
-        equipment.set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.LEATHER_CHESTPLATE ) );
-        equipment.set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.LEATHER_LEGGINGS ) );
-
-        // Add arrows to the NPC's inventory
-        for ( int i = 9; i < 18; i++ )
-        {
-            npcInventoryTrait.setItem( i, new ItemStack( Material.ARROW, 64) );
-        }
-    }
-
-    private void setNpcBodyguardEquipment( NPC npc )
-    {
-        Equipment equipment = npc.getOrAddTrait( Equipment.class );
-
-        equipment.set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.IRON_SWORD ) );
-        equipment.set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.IRON_BOOTS ) );
-        equipment.set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.GOLDEN_HELMET ) );
-        equipment.set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.GOLDEN_CHESTPLATE ) );
-        equipment.set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.IRON_LEGGINGS ) );
-    }
-
-    private void setNpcFootSoldierEquipment( NPC npc )
-    {
-        Equipment equipment = npc.getOrAddTrait( Equipment.class );
-
-        equipment.set( Equipment.EquipmentSlot.HAND, new ItemStack( Material.IRON_SWORD ) );
-        equipment.set( Equipment.EquipmentSlot.BOOTS, new ItemStack( Material.IRON_BOOTS ) );
-        equipment.set( Equipment.EquipmentSlot.HELMET, new ItemStack( Material.COPPER_HELMET ) );
-        equipment.set( Equipment.EquipmentSlot.CHESTPLATE, new ItemStack( Material.COPPER_CHESTPLATE ) );
-        equipment.set( Equipment.EquipmentSlot.LEGGINGS, new ItemStack( Material.IRON_LEGGINGS ) );
-    }
 }

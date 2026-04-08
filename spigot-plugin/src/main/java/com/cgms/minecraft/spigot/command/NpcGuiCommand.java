@@ -1,6 +1,12 @@
+/*
+ * Copyright (c) 2026
+ * SPDX-License-Identifier: MIT
+ * The Cow Goes Moo Software (TCGMS)
+ */
+
 package com.cgms.minecraft.spigot.command;
 
-import com.cgms.minecraft.spigot.util.MinecraftAiConstants;
+import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -34,28 +40,28 @@ public class NpcGuiCommand implements CommandExecutor
 
         ItemStack npcButton = new ItemStack( Material.PLAYER_HEAD );
         ItemMeta npcButtonMeta = npcButton.getItemMeta();
-        npcButtonMeta.setDisplayName( MinecraftAiConstants.ARMORED_KNIGHT );
+        npcButtonMeta.setDisplayName( MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE );
         npcButton.setItemMeta( npcButtonMeta );
 
         inventory.setItem( 1, npcButton );
 
         npcButton = new ItemStack( Material.PLAYER_HEAD );
         npcButtonMeta = npcButton.getItemMeta();
-        npcButtonMeta.setDisplayName( MinecraftAiConstants.FOOT_SOLDIER );
+        npcButtonMeta.setDisplayName( MinecraftEmpiresConstants.NPC_FOOT_SOLDIER_TYPE );
         npcButton.setItemMeta( npcButtonMeta );
 
         inventory.setItem( 2, npcButton );
 
         npcButton = new ItemStack( Material.PLAYER_HEAD );
         npcButtonMeta = npcButton.getItemMeta();
-        npcButtonMeta.setDisplayName( MinecraftAiConstants.BODYGUARD );
+        npcButtonMeta.setDisplayName( MinecraftEmpiresConstants.NPC_BODYGUARD_TYPE );
         npcButton.setItemMeta( npcButtonMeta );
 
         inventory.setItem( 3, npcButton );
 
         npcButton = new ItemStack( Material.PLAYER_HEAD );
         npcButtonMeta = npcButton.getItemMeta();
-        npcButtonMeta.setDisplayName( MinecraftAiConstants.ARCHER );
+        npcButtonMeta.setDisplayName( MinecraftEmpiresConstants.NPC_ARCHER_TYPE );
         npcButton.setItemMeta( npcButtonMeta );
 
         inventory.setItem( 4, npcButton );

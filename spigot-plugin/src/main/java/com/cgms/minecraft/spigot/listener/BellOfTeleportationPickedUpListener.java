@@ -1,8 +1,14 @@
+/*
+ * Copyright (c) 2026
+ * SPDX-License-Identifier: MIT
+ * The Cow Goes Moo Software (TCGMS)
+ */
+
 package com.cgms.minecraft.spigot.listener;
 
 import com.cgms.minecraft.spigot.item.BellOfTeleportation;
-import com.cgms.minecraft.spigot.util.BellOfTeleportationUtil;
-import com.cgms.minecraft.spigot.util.MinecraftAiConstants;
+import com.cgms.minecraft.spigot.item.BellOfTeleportationManager;
+import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
@@ -34,19 +40,19 @@ public class BellOfTeleportationPickedUpListener implements Listener
 
             ItemStack itemStack = event.getItem().getItemStack();
 
-            BellOfTeleportationUtil bellOfTeleportationUtil = BellOfTeleportationUtil.getInstance();
-            BellOfTeleportation bellOfTeleportation = bellOfTeleportationUtil.retrieveBellOfTeleportationUUIDFromPersistentDataContainer( itemStack.getItemMeta().getPersistentDataContainer() );
+            BellOfTeleportationManager bellOfTeleportationManager = BellOfTeleportationManager.getInstance();
+            BellOfTeleportation bellOfTeleportation = bellOfTeleportationManager.retrieveBellOfTeleportationUUIDFromPersistentDataContainer( itemStack.getItemMeta().getPersistentDataContainer() );
 
             if( bellOfTeleportation != null )
             {
-                itemStack.getItemMeta().getPersistentDataContainer().set( NamespacedKey.minecraft( MinecraftAiConstants.BELLS_OF_TELEPORTATION_UUID_FIELD ),
+                itemStack.getItemMeta().getPersistentDataContainer().set( NamespacedKey.minecraft( MinecraftEmpiresConstants.BELLS_OF_TELEPORTATION_UUID_FIELD ),
                         PersistentDataType.STRING, bellOfTeleportation.getUuid()
                 );
 
-                itemStack.getItemMeta().setItemName( MinecraftAiConstants.BELLS_OF_TELEPORTATION );
-                itemStack.getItemMeta().setDisplayName( MinecraftAiConstants.BELLS_OF_TELEPORTATION );
+                itemStack.getItemMeta().setItemName( MinecraftEmpiresConstants.BELLS_OF_TELEPORTATION );
+                itemStack.getItemMeta().setDisplayName( MinecraftEmpiresConstants.BELLS_OF_TELEPORTATION );
 
-                bellOfTeleportationUtil.updateBellOfTeleportationMappings( bellOfTeleportation );
+                bellOfTeleportationManager.updateBellOfTeleportationMappings( bellOfTeleportation );
             }
         }
     }

@@ -1,6 +1,13 @@
+/*
+ * Copyright (c) 2026
+ * SPDX-License-Identifier: MIT
+ * The Cow Goes Moo Software (TCGMS)
+ */
+
 package com.cgms.minecraft.spigot.listener;
 
-import com.cgms.minecraft.spigot.util.NpcFactory;
+import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
+import com.cgms.minecraft.spigot.plugin.NpcFactory;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -34,7 +41,10 @@ public class NpcSpawnItemDroppedListener implements Listener
             droppedItem.remove();
 
             // Spawn a NPC at the location
-            npc = NpcFactory.spawnNPC( event.getItemDrop().getLocation(), droppedItem.getItemStack().getItemMeta().getDisplayName(), player, UUID.randomUUID().toString() );
+            npc = NpcFactory.spawnNPC( MinecraftEmpiresConstants.ENTITY_PLAYER_TYPE, event.getItemDrop().getLocation(),
+                    droppedItem.getItemStack().getItemMeta().getDisplayName(),
+                    player, UUID.randomUUID().toString()
+            );
         }
     }
 
