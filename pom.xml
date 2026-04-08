@@ -38,13 +38,6 @@
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
 
-
-<!--        <repository>-->
-<!--            &lt;!&ndash; Some minecraft jars are sus and do not have a maven repo and must be manually included in project &ndash;&gt;-->
-<!--            <id>project-local-repo</id>-->
-<!--            <url>file://${project.basedir}/libs</url>-->
-<!--        </repository>-->
-
     </repositories>
 
 </project>
