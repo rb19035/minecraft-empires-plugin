@@ -1,3 +1,8 @@
+<!--
+  ~ Copyright (c) 2026
+  ~ SPDX-License-Identifier: MIT
+  -->
+
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.cgms</groupId>
@@ -8,6 +13,7 @@
     <modules>
         <module>spigot-plugin</module>
         <module>minecraft-ai</module>
+        <module>minecraft-empires-dto</module>
     </modules>
 
     <properties>
@@ -28,10 +34,16 @@
         </repository>
 
         <repository>
-            <!-- Some minecraft jars are sus and do not have a maven repo and must be manually included in project -->
-            <id>project-local-repo</id>
-            <url>file://${project.basedir}/libs</url>
+            <id>enginehub-maven</id>
+            <url>https://maven.enginehub.org/repo/</url>
         </repository>
+
+
+<!--        <repository>-->
+<!--            &lt;!&ndash; Some minecraft jars are sus and do not have a maven repo and must be manually included in project &ndash;&gt;-->
+<!--            <id>project-local-repo</id>-->
+<!--            <url>file://${project.basedir}/libs</url>-->
+<!--        </repository>-->
 
     </repositories>
 
