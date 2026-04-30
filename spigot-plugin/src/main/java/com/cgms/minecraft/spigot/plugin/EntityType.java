@@ -6,11 +6,11 @@
 
 package com.cgms.minecraft.spigot.plugin;
 
-public enum NpcType
+public enum EntityType
 {
-    ARMORED_KNIGHT,
-    BODY_GUARD,
-    FOOT_SOLDIER,
-    ARCHER,
+    PLAYER,
     VILLAGER,
+    ZOMBIE,
+    GIANT,
+    SKELETON
 }

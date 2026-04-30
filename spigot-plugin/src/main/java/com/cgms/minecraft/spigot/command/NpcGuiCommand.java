@@ -67,6 +67,14 @@ public class NpcGuiCommand implements CommandExecutor
         inventory.setItem( 4, npcButton );
         player.openInventory( inventory );
 
+        npcButton = new ItemStack( Material.PLAYER_HEAD );
+        npcButtonMeta = npcButton.getItemMeta();
+        npcButtonMeta.setDisplayName( MinecraftEmpiresConstants.NPC_VILLAGER_TYPE );
+        npcButton.setItemMeta( npcButtonMeta );
+
+        inventory.setItem( 5, npcButton );
+        player.openInventory( inventory );
+
         return true;
     }
 }

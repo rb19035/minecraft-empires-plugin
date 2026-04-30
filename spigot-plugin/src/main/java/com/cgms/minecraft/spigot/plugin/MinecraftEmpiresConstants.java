@@ -15,6 +15,7 @@ public class MinecraftEmpiresConstants
     public static final String NPC_FOOT_SOLDIER_TYPE = "Foot Soldier";
     public static final String NPC_BODYGUARD_TYPE = "Bodyguard";
     public static final String NPC_ARCHER_TYPE = "Archer";
+    public static final String NPC_VILLAGER_TYPE = "Villager";
 
     /**
      * Constants for entity types in Minecraft Empires

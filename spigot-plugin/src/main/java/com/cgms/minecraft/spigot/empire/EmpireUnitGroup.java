@@ -11,9 +11,9 @@ import java.util.List;
 public class EmpireUnitGroup
 {
     private String groupName;
-    private List<EmpireUnit> units;
+    private List<EmpireNPC> units;
 
-    public EmpireUnitGroup( String groupName, List<EmpireUnit> units )
+    public EmpireUnitGroup( String groupName, List<EmpireNPC> units )
     {
         this.groupName = groupName;
         this.units = units;
@@ -34,12 +34,12 @@ public class EmpireUnitGroup
         this.groupName = groupName;
     }
 
-    public List<EmpireUnit> getUnits()
+    public List<EmpireNPC> getUnits()
     {
         return units;
     }
 
-    public void setUnits( List<EmpireUnit> units )
+    public void setUnits( List<EmpireNPC> units )
     {
         this.units = units;
     }

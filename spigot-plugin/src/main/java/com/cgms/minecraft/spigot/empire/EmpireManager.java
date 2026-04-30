@@ -14,6 +14,8 @@ import lombok.NonNull;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.api.trait.trait.Owner;
+import org.bukkit.Bukkit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,6 +95,19 @@ public class EmpireManager
 
             return empire;
         }
+    }
+
+    public void addNpcToEmpire( @NonNull NPC npc )
+    {
+        Owner ownerTrait = npc.getOrAddTrait( Owner.class );
+        Empire empire = this.playerMameToEmpireNameMap.get( Bukkit.getPlayer( ownerTrait.getOwnerId() ).getName() );
+
+        if ( empire == null )
+        {
+            empire = new
+        }
+
+        empire.addNpc( npc );
     }
 
     public void removeEmpiresForPlayer( @NonNull String playerName )

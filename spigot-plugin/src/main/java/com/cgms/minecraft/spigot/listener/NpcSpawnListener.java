@@ -6,6 +6,7 @@
 
 package com.cgms.minecraft.spigot.listener;
 
+import com.cgms.minecraft.spigot.empire.EmpireManager;
 import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
 import com.cgms.minecraft.spigot.plugin.NpcFactory;
 import net.citizensnpcs.api.event.NPCSpawnEvent;
@@ -13,10 +14,12 @@ import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NpcSpawnListener implements Listener
 {
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger( NpcSpawnListener.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger( NpcSpawnListener.class );
+
     @EventHandler
     public void onNpcSpawn( NPCSpawnEvent event)
     {
@@ -25,6 +28,9 @@ public class NpcSpawnListener implements Listener
 
         if ( npc.getName() != null )
         {
+            EmpireManager empireManager = EmpireManager.getInstance();
+            empireManager.addNpcToEmpire( npc );
+
             if( npc.getName().contains( MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE ) )
             {
                 LOGGER.info( "Found Knight...Setting equipment." );

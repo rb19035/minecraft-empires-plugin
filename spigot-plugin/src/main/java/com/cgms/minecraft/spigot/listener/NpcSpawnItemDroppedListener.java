@@ -6,8 +6,11 @@
 
 package com.cgms.minecraft.spigot.listener;
 
+import com.cgms.minecraft.spigot.empire.EmpireNPC;
+import com.cgms.minecraft.spigot.plugin.EntityType;
 import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
 import com.cgms.minecraft.spigot.plugin.NpcFactory;
+import com.cgms.minecraft.spigot.plugin.NpcType;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -35,16 +38,33 @@ public class NpcSpawnItemDroppedListener implements Listener
         Item droppedItem = event.getItemDrop();
         if ( droppedItem.getItemStack().getType() == Material.PLAYER_HEAD )
         {
-            LOGGER.debug( "PlayerDropItemEvent caught for custom NPC." );
+            String itemDroppedName = droppedItem.getItemStack().getItemMeta().getDisplayName();
+
+            LOGGER.debug( "PlayerDropItemEvent caught for custom NPC {}", itemDroppedName );
+
+            if( itemDroppedName.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_VILLAGER_TYPE ) )
+            {
+                EmpireNPC empireNPC = new EmpireNPC( EntityType.VILLAGER,
+                        NpcType.VILLAGER,
+                        event.getItemDrop().getLocation(),
+                        player.getUniqueId().toString(),
+                        player.getName(),
+                        "temp"
+                );
+
+                empireNPC.spawnNPC();
+
+            } else
+            {
+                // Spawn a NPC at the location
+                npc = NpcFactory.spawnNPC( MinecraftEmpiresConstants.ENTITY_PLAYER_TYPE, event.getItemDrop().getLocation(),
+                        droppedItem.getItemStack().getItemMeta().getDisplayName(),
+                        player, UUID.randomUUID().toString()
+                );
+            }
 
             // Remove the dropped diamond
             droppedItem.remove();
-
-            // Spawn a NPC at the location
-            npc = NpcFactory.spawnNPC( MinecraftEmpiresConstants.ENTITY_PLAYER_TYPE, event.getItemDrop().getLocation(),
-                    droppedItem.getItemStack().getItemMeta().getDisplayName(),
-                    player, UUID.randomUUID().toString()
-            );
         }
     }
 

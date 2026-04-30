@@ -25,14 +25,14 @@ public class Empire
     private List<Enemy> enemyList;
     private List<Ally> allyList;
     private List<EmpireTerritory> territoryList;
-    private List<EmpireUnit> unitList;
-    private Map< String, List<EmpireUnit> > unitGroupNameToUnitListMap;
+    private List<EmpireNPC> empireNPCList;
+    private Map< String, List<EmpireNPC> > unitGroupNameToUnitListMap;
 
     public Empire()
     {
     }
 
-    public Empire( String empireUUID, String empireName, String leaderName, String leaderUUID, EmpireLeaderEntityType leaderType, List<Enemy> enemyList, List<Ally> allyList, List<EmpireTerritory> territoryList, List<EmpireUnit> unitList, Map<String, List<EmpireUnit>> unitGroupNameToUnitListMap )
+    public Empire( String empireUUID, String empireName, String leaderName, String leaderUUID, EmpireLeaderEntityType leaderType, List<Enemy> enemyList, List<Ally> allyList, List<EmpireTerritory> territoryList, List<EmpireNPC> empireNPCList, Map<String, List<EmpireNPC>> unitGroupNameToUnitListMap )
     {
         this.empireUUID = empireUUID;
         this.empireName = empireName;
@@ -42,7 +42,7 @@ public class Empire
         this.enemyList = enemyList;
         this.allyList = allyList;
         this.territoryList = territoryList;
-        this.unitList = unitList;
+        this.empireNPCList = empireNPCList;
         this.unitGroupNameToUnitListMap = unitGroupNameToUnitListMap;
     }
 
@@ -126,22 +126,22 @@ public class Empire
         this.territoryList = territoryList;
     }
 
-    public List<EmpireUnit> getUnitList()
+    public List<EmpireNPC> getEmpireNPCList()
     {
-        return unitList;
+        return empireNPCList;
     }
 
-    public void setUnitList( List<EmpireUnit> unitList )
+    public void setEmpireNPCList( List<EmpireNPC> empireNPCList )
     {
-        this.unitList = unitList;
+        this.empireNPCList = empireNPCList;
     }
 
-    public Map<String, List<EmpireUnit>> getUnitGroupNameToUnitListMap()
+    public Map<String, List<EmpireNPC>> getUnitGroupNameToUnitListMap()
     {
         return unitGroupNameToUnitListMap;
     }
 
-    public void setUnitGroupNameToUnitListMap( Map<String, List<EmpireUnit>> unitGroupNameToUnitListMap )
+    public void setUnitGroupNameToUnitListMap( Map<String, List<EmpireNPC>> unitGroupNameToUnitListMap )
     {
         this.unitGroupNameToUnitListMap = unitGroupNameToUnitListMap;
     }

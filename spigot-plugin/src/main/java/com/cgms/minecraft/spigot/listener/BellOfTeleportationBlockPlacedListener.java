@@ -18,20 +18,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BellOfTeleportationBlockPlacedListener implements Listener
 {
     private static final Logger LOGGER = LoggerFactory.getLogger( BellOfTeleportationBlockPlacedListener.class.getName() );
-    private final Plugin plugin;
 
-
-    public BellOfTeleportationBlockPlacedListener( Plugin plugin )
-    {
-        this.plugin = plugin;
-    }
+    public BellOfTeleportationBlockPlacedListener(){}
 
     @EventHandler
     public void onBlockPlace( BlockPlaceEvent event)

@@ -32,10 +32,12 @@ public class MinecraftEmpiresPlugin extends JavaPlugin implements Listener
         try
         {
             PluginManager pluginManager = getServer().getPluginManager();
+
+            // Load all the listeners
             pluginManager.registerEvents( new NpcNavigationCompleteListener(), this );
             pluginManager.registerEvents( new NpcSpawnItemDroppedListener(), this );
             pluginManager.registerEvents( new BellOfTeleportationBlockBreakListener( this ), this );
-            pluginManager.registerEvents( new BellOfTeleportationBlockPlacedListener( this ), this );
+            pluginManager.registerEvents( new BellOfTeleportationBlockPlacedListener(), this );
             pluginManager.registerEvents( new BellOfTeleportationRingListener( this ), this );
             pluginManager.registerEvents( new BellOfTeleportationPickedUpListener( this ), this );
             pluginManager.registerEvents( new BellOfTeleportationOnBlockDropListener( this ), this );
@@ -44,11 +46,11 @@ public class MinecraftEmpiresPlugin extends JavaPlugin implements Listener
             pluginManager.registerEvents( new NpcDeathListener(), this );
             pluginManager.registerEvents( new BlockPlacedListener(), this );
 
-
+            // Load all the commands and menus
             this.getCommand( "npc-gui" ).setExecutor( new NpcGuiCommand() );
             this.getCommand( "magic-gui" ).setExecutor( new MagicItemsGuiCommand( this ) );
 
-            // Start the ActiveMQ connection manager
+            // Start the ActiveMQ connection manager to communicate with the AI server
             this.activeMqConnectionManager = ActiveMqConnectionManager.getInstance();
             this.activeMqConnectionManager.start();
 

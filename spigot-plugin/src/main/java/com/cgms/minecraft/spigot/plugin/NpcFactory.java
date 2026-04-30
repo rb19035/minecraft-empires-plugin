@@ -17,6 +17,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 import org.mcmonkey.sentinel.SentinelTrait;
 import org.slf4j.Logger;
@@ -41,45 +42,60 @@ public class NpcFactory
         ownerTrait.setOwner( player.getUniqueId() );
 
         Inventory npcInventoryTrait = npc.getOrAddTrait(Inventory.class);
-        SentinelTrait sentinelTrait = npc.getOrAddTrait( SentinelTrait.class );
-        sentinelTrait.fightback = true;
-        sentinelTrait.invincible = false;
-        sentinelTrait.allowKnockback = true;
-        sentinelTrait.health = 20.0;
-        sentinelTrait.damage = -1.0;
 
-
-        if( npcType.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE ) )
+        if ( npcType.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_VILLAGER_TYPE ) )
         {
-            npc.setName( MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE + " For "+ player.getName() );
-            setNpcKnightEquipment( npc );
+            npc.setName( MinecraftEmpiresConstants.NPC_VILLAGER_TYPE + " For "+ player.getName() );
 
-        } else if ( npcType.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_ARCHER_TYPE ) )
+            Villager villager = (Villager) npc.getEntity();
+            villager.setProfession( Villager.Profession.FARMER );
+            villager.setVillagerLevel( 1 );
+            npc.data().set( NPC.Metadata.USE_MINECRAFT_AI, true );
+
+        } else
         {
-            npc.setName( MinecraftEmpiresConstants.NPC_ARCHER_TYPE + " For "+ player.getName() );
-            setNpcArcherEquipment( npc );
+            SentinelTrait sentinelTrait = npc.getOrAddTrait( SentinelTrait.class );
+            sentinelTrait.fightback = true;
+            sentinelTrait.invincible = false;
+            sentinelTrait.allowKnockback = true;
+            sentinelTrait.health = 20.0;
+            sentinelTrait.damage = -1.0;
 
-            // Add arrows to the NPC's inventory
-            for ( int i = 9; i < 18; i++ )
+            if( npcType.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE ) )
             {
-                npcInventoryTrait.setItem( i, new ItemStack( Material.ARROW, 64) );
+                npc.setName( MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE + " For "+ player.getName() );
+                setNpcKnightEquipment( npc );
+
+            } else if ( npcType.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_ARCHER_TYPE ) )
+            {
+                npc.setName( MinecraftEmpiresConstants.NPC_ARCHER_TYPE + " For "+ player.getName() );
+                setNpcArcherEquipment( npc );
+
+                // Add arrows to the NPC's inventory
+                for ( int i = 9; i < 18; i++ )
+                {
+                    npcInventoryTrait.setItem( i, new ItemStack( Material.ARROW, 64) );
+                }
+
+                LOGGER.debug( "Creating NPC Type:" + MinecraftEmpiresConstants.NPC_ARCHER_TYPE );
+
+            } else if ( npcType.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_BODYGUARD_TYPE ) )
+            {
+                // Set NPC to guard player that created it.
+                sentinelTrait.setGuarding( player.getUniqueId() );
+
+                npc.setName( MinecraftEmpiresConstants.NPC_BODYGUARD_TYPE + " For "+ player.getName() );
+                setNpcBodyguardEquipment( npc );
+
+            } else if ( npcType.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_FOOT_SOLDIER_TYPE ) )
+            {
+                npc.setName( MinecraftEmpiresConstants.NPC_FOOT_SOLDIER_TYPE + " For "+ player.getName() );
+                setNpcFootSoldierEquipment( npc );
             }
-
-            LOGGER.debug( "Creating NPC Type:" + MinecraftEmpiresConstants.NPC_ARCHER_TYPE );
-
-        } else if ( npcType.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_BODYGUARD_TYPE ) )
-        {
-            // Set NPC to guard player that created it.
-            sentinelTrait.setGuarding( player.getUniqueId() );
-
-            npc.setName( MinecraftEmpiresConstants.NPC_BODYGUARD_TYPE + " For "+ player.getName() );
-            setNpcBodyguardEquipment( npc );
-
-        } else if ( npcType.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_FOOT_SOLDIER_TYPE ) )
-        {
-            npc.setName( MinecraftEmpiresConstants.NPC_FOOT_SOLDIER_TYPE + " For "+ player.getName() );
-            setNpcFootSoldierEquipment( npc );
         }
+
+
+
 
         return npc;
     }
@@ -157,6 +173,10 @@ public class NpcFactory
         } else if( entityType.equalsIgnoreCase( MinecraftEmpiresConstants.ENTITY_SKELETON_TYPE ) )
         {
             npc = CitizensAPI.getNPCRegistry().createNPC( EntityType.SKELETON, name);
+
+        } else if( entityType.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_VILLAGER_TYPE ) )
+        {
+            npc = CitizensAPI.getNPCRegistry().createNPC( EntityType.VILLAGER, name);
         }
 
         return npc;
