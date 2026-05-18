@@ -15,6 +15,5 @@ commands:
     usage: "/magic-gui"
   empire-cmd:
     description: "Commands for managing empires"
-    usage: "/empire <subcommand> <args>"
-    tab-completer: com.cgms.minecraft.spigot.plugin.EmpireCommandTabCompleter
+    usage: "/empire-cmd [subcommand] <args>"
 

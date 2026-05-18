@@ -22,7 +22,7 @@ public abstract class DatabaseFacade<T>
 
     static Connection DATABASE_CONNECTION;
 
-    public abstract void create( @NonNull T object);
+    public abstract void create( @NonNull T object) throws UniqueConstraintException;
     public abstract void update( @NonNull T object) throws UniqueConstraintException;
     public abstract void delete( @NonNull T object);
     public abstract T findByName( int id );

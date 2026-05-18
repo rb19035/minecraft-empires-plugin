@@ -17,7 +17,7 @@ public class EmpireCommandTabCompleter implements TabCompleter
     @Override
     public List<String> onTabComplete( CommandSender sender, Command command, String label, String[] args )
     {
-        if( args.length == 0 )
+        if( args.length == 1 )
         {
             return List.of( EmpireCommandOptions.CREATE_COMMAND, EmpireCommandOptions.RENAME_COMMAND );
         }

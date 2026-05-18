@@ -43,7 +43,7 @@ public class EmpireFacade extends DatabaseFacade<Empire>
     }
 
     @Override
-    public void create( @NonNull Empire object )
+    public void create( @NonNull Empire object ) throws UniqueConstraintException
     {
         try( PreparedStatement ps = DATABASE_CONNECTION.prepareStatement( INSET_EMPIRE_SQL, Statement.RETURN_GENERATED_KEYS  ) )
         {
@@ -71,7 +71,7 @@ public class EmpireFacade extends DatabaseFacade<Empire>
         catch ( SQLException e )
         {
             LOGGER.error( "Failed to create empire for {}", object.getName(), e );
-            throw new RuntimeException( e );
+            throw new UniqueConstraintException( e );
         }
     }
 

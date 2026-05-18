@@ -36,7 +36,6 @@ public class EmpireCommand implements CommandExecutor
             return true;
         }
 
-
         if ( args.length == 0 )
         {
             player.sendMessage("Uhhmmm ... The command was empty. Nothing to see here. Move along.");
@@ -68,7 +67,7 @@ public class EmpireCommand implements CommandExecutor
                 empire.setName( StringEscapeUtils.escapeJava( args[ 1 ] ) );
                 empireFacade.update( empire );
 
-                player.sendMessage( "Empire renamed successfully." );
+                player.sendMessage( "Empire renamed successfully to: " + empire.getName() + "." );
 
             } else
             {
