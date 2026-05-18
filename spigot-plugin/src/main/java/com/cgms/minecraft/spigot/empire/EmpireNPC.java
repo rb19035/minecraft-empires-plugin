@@ -8,8 +8,6 @@ package com.cgms.minecraft.spigot.empire;
 
 import com.cgms.minecraft.spigot.plugin.EntityType;
 import com.cgms.minecraft.spigot.plugin.NpcType;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NonNull;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -17,87 +15,88 @@ import net.citizensnpcs.api.trait.trait.Owner;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import java.util.Objects;
-
 public class EmpireNPC
 {
-    @JsonProperty
-    private final EntityType entityType;
-
-    @JsonProperty
-    private final NpcType npcType;
-
-    @JsonProperty
-    private EmpireUnitLocation location;
-
-    @JsonProperty
-    private final String playerUUID;
-
-    @JsonProperty
-    private final String playerName;
-
-    @JsonProperty
-    private final String unitName;
+    private int id;
+    private String name;
+    private EntityType entityType;
+    private NpcType npcType;
+    private Empire empire;
 
     private NPC npc;
 
-    @JsonCreator
-    public EmpireNPC( @JsonProperty @NonNull EntityType entityType,
-                      @JsonProperty @NonNull NpcType npcType,
-                      @JsonProperty @NonNull EmpireUnitLocation location,
-                      @JsonProperty @NonNull String playerUUID,
-                      @JsonProperty @NonNull String playerName,
-                      @JsonProperty @NonNull String unitName )
+
+    public EmpireNPC(
+            @NonNull String name,
+            @NonNull EntityType entityType,
+            @NonNull NpcType npcType,
+            @NonNull Empire empire
+    )
     {
+        this.name = name;
         this.entityType = entityType;
         this.npcType = npcType;
-        this.location = location;
-        this.playerUUID = playerUUID;
-        this.playerName = playerName;
-        this.unitName = unitName;
-
+        this.empire = empire;
     }
 
-    public EmpireNPC( @NonNull EntityType entityType,
-                      @NonNull NpcType npcType,
-                      @NonNull Location location,
-                      @NonNull String playerUUID,
-                      @NonNull String playerName,
-                      @NonNull String unitName )
+    public EmpireNPC(
+            @NonNull String name,
+            @NonNull EntityType entityType,
+            @NonNull NpcType npcType,
+            @NonNull Empire empire,
+            @NonNull NPC npc
+    )
     {
+        this.name = name;
         this.entityType = entityType;
         this.npcType = npcType;
-        this.location = new EmpireUnitLocation( location );
-        this.playerUUID = playerUUID;
-        this.playerName = playerName;
-        this.unitName = unitName;
+        this.empire = empire;
+        this.npc = npc;
     }
 
-    public void spawnNPC()
+    public EmpireNPC()
+    {
+    }
+
+    public void spawn( Location location )
     {
         this.npc = this.deriveNPC();
-        this.npc.spawn( new Location( Bukkit.getWorld( this.location.getWorldName() ),
-                this.location.getLocationX(),
-                this.location.getLocationY(),
-                this.location.getLocationZ() )
-        );
-
+        this.npc.spawn( location );
         this.npc.setFlyable( false );
         this.npc.setProtected( false );
 
         Owner ownerTrait = npc.getOrAddTrait( Owner.class );
-        ownerTrait.setOwner( Bukkit.getPlayer( this.playerUUID ) );
+        ownerTrait.setOwner( Bukkit.getPlayer( this.empire.getLeaderUUID() ) );
     }
 
-    public NPC getNPC()
+    public int getId()
     {
-        return npc;
+        return id;
     }
 
+    public void setId( int id )
+    {
+        this.id = id;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 
     public EntityType getEntityType()
     {
         return entityType;
+    }
+
+    public void setEntityType( EntityType entityType )
+    {
+        this.entityType = entityType;
     }
 
     public NpcType getNpcType()
@@ -105,55 +104,29 @@ public class EmpireNPC
         return npcType;
     }
 
-    public EmpireUnitLocation getLocation()
+    public void setNpcType( NpcType npcType )
     {
-        return location;
+        this.npcType = npcType;
     }
 
-    public String getPlayerUUID()
+    public Empire getEmpire()
     {
-        return playerUUID;
+        return empire;
     }
 
-    public String getPlayerName()
+    public void setEmpire( Empire empire )
     {
-        return playerName;
+        this.empire = empire;
     }
 
-    public String getUnitName()
+    public NPC getNpc()
     {
-        return unitName;
+        return npc;
     }
 
-    public void setLocation( EmpireUnitLocation location )
+    public void setNpc( NPC npc )
     {
-        this.location = location;
-    }
-
-    public void setLocation( double x, double y, double z, String worldName )
-    {
-        this.location = new EmpireUnitLocation( worldName, x, y, z );
-    }
-
-    public String toString()
-    {
-        return "EmpireUnit [entityType=" + entityType + ", npcType=" + npcType + ", location=" + location + ", playerUUID=" + playerUUID + ", playerName=" + playerName + ", unitName=" + unitName + "]";
-    }
-
-    @Override
-    public boolean equals( Object o )
-    {
-        if ( !(o instanceof EmpireNPC empireNPC) )
-        {
-            return false;
-        }
-        return entityType == empireNPC.entityType && npcType == empireNPC.npcType && Objects.equals( location, empireNPC.location ) && Objects.equals( playerUUID, empireNPC.playerUUID ) && Objects.equals( playerName, empireNPC.playerName ) && Objects.equals( unitName, empireNPC.unitName ) && Objects.equals( npc, empireNPC.npc );
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash( entityType, npcType, location, playerUUID, playerName, unitName, npc );
+        this.npc = npc;
     }
 
     private NPC deriveNPC()
@@ -162,19 +135,19 @@ public class EmpireNPC
 
         if( this.entityType.equals( EntityType.PLAYER ) )
         {
-            npc = CitizensAPI.getNPCRegistry().createNPC( org.bukkit.entity.EntityType.PLAYER, this.unitName );
+            npc = CitizensAPI.getNPCRegistry().createNPC( org.bukkit.entity.EntityType.PLAYER, this.name );
 
         } else if( entityType.equals( EntityType.ZOMBIE ) )
         {
-            npc = CitizensAPI.getNPCRegistry().createNPC( org.bukkit.entity.EntityType.ZOMBIE, this.unitName);
+            npc = CitizensAPI.getNPCRegistry().createNPC( org.bukkit.entity.EntityType.ZOMBIE, this.name );
 
         } else if( entityType.equals( EntityType.SKELETON ) )
         {
-            npc = CitizensAPI.getNPCRegistry().createNPC( org.bukkit.entity.EntityType.SKELETON, this.unitName );
+            npc = CitizensAPI.getNPCRegistry().createNPC( org.bukkit.entity.EntityType.SKELETON, this.name );
 
         } else if( entityType.equals( EntityType.VILLAGER ) )
         {
-            npc = CitizensAPI.getNPCRegistry().createNPC( org.bukkit.entity.EntityType.VILLAGER, this.unitName );
+            npc = CitizensAPI.getNPCRegistry().createNPC( org.bukkit.entity.EntityType.VILLAGER, this.name );
         }
 
         return npc;

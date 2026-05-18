@@ -7,6 +7,8 @@
 package com.cgms.minecraft.spigot.plugin;
 
 import com.cgms.minecraft.messaging.ActiveMqConnectionManager;
+import com.cgms.minecraft.spigot.command.EmpireCommand;
+import com.cgms.minecraft.spigot.command.EmpireCommandTabCompleter;
 import com.cgms.minecraft.spigot.command.MagicItemsGuiCommand;
 import com.cgms.minecraft.spigot.command.NpcGuiCommand;
 import com.cgms.minecraft.spigot.listener.*;
@@ -49,6 +51,9 @@ public class MinecraftEmpiresPlugin extends JavaPlugin implements Listener
             // Load all the commands and menus
             this.getCommand( "npc-gui" ).setExecutor( new NpcGuiCommand() );
             this.getCommand( "magic-gui" ).setExecutor( new MagicItemsGuiCommand( this ) );
+            this.getCommand( "empire-cmd" ).setExecutor( new EmpireCommand() );
+            this.getCommand( "empire-cmd" ).setTabCompleter( new EmpireCommandTabCompleter() );
+
 
             // Start the ActiveMQ connection manager to communicate with the AI server
             this.activeMqConnectionManager = ActiveMqConnectionManager.getInstance();
@@ -73,6 +78,7 @@ public class MinecraftEmpiresPlugin extends JavaPlugin implements Listener
 
             LOGGER.info( "Minecraft Empires Plugin has been enabled!" );
 
+            Runtime.getRuntime().addShutdownHook( new Thread( new SystemShutdownHook() ) );
 
         } catch ( JMSException jmse )
         {

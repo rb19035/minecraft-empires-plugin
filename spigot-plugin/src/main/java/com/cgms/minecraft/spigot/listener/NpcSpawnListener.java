@@ -6,7 +6,7 @@
 
 package com.cgms.minecraft.spigot.listener;
 
-import com.cgms.minecraft.spigot.empire.EmpireManager;
+import com.cgms.minecraft.spigot.database.EmpireFacade;
 import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
 import com.cgms.minecraft.spigot.plugin.NpcFactory;
 import net.citizensnpcs.api.event.NPCSpawnEvent;
@@ -28,8 +28,8 @@ public class NpcSpawnListener implements Listener
 
         if ( npc.getName() != null )
         {
-            EmpireManager empireManager = EmpireManager.getInstance();
-            empireManager.addNpcToEmpire( npc );
+            EmpireFacade empireFacade = EmpireFacade.getInstance();
+            //empireFacade.addNpcToEmpire( npc );
 
             if( npc.getName().contains( MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE ) )
             {

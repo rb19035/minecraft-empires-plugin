@@ -9,6 +9,8 @@ package com.cgms.minecraft.spigot.empire;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,53 +19,62 @@ import java.util.Map;
         property = "ObjectID")
 public class Empire
 {
-    private String empireUUID;
-    private String empireName;
+    private int id;
+    private String name;
     private String leaderName;
     private String leaderUUID;
     private EmpireLeaderEntityType leaderType;
-    private List<Enemy> enemyList;
-    private List<Ally> allyList;
+    private List<Empire> empireEnemyList;
+    private List<Empire> empireAllyList;
     private List<EmpireTerritory> territoryList;
     private List<EmpireNPC> empireNPCList;
     private Map< String, List<EmpireNPC> > unitGroupNameToUnitListMap;
 
     public Empire()
     {
+        this.empireEnemyList = new ArrayList<>();
+        this.empireAllyList = new ArrayList<>();
+        this.unitGroupNameToUnitListMap = new HashMap<>();
+        this.territoryList = new ArrayList<>();
+        this.empireNPCList = new ArrayList<>();
     }
 
-    public Empire( String empireUUID, String empireName, String leaderName, String leaderUUID, EmpireLeaderEntityType leaderType, List<Enemy> enemyList, List<Ally> allyList, List<EmpireTerritory> territoryList, List<EmpireNPC> empireNPCList, Map<String, List<EmpireNPC>> unitGroupNameToUnitListMap )
+    public Empire( int empireId, String empireName, String leaderName, String leaderUUID,
+                   EmpireLeaderEntityType leaderType, List<Empire> empireEnemyList, List<Empire> empireAllyList,
+                   List<EmpireTerritory> territoryList, List<EmpireNPC> empireNPCList, Map<String,
+                   List<EmpireNPC>> unitGroupNameToUnitListMap
+    )
     {
-        this.empireUUID = empireUUID;
-        this.empireName = empireName;
+        this.id = id;
+        this.name = empireName;
         this.leaderName = leaderName;
         this.leaderUUID = leaderUUID;
         this.leaderType = leaderType;
-        this.enemyList = enemyList;
-        this.allyList = allyList;
+        this.empireEnemyList = empireEnemyList;
+        this.empireAllyList = empireAllyList;
         this.territoryList = territoryList;
         this.empireNPCList = empireNPCList;
         this.unitGroupNameToUnitListMap = unitGroupNameToUnitListMap;
     }
 
-    public String getEmpireUUID()
+    public int getId()
     {
-        return empireUUID;
+        return this.id;
     }
 
-    public void setEmpireUUID( String empireUUID )
+    public void setId( int id )
     {
-        this.empireUUID = empireUUID;
+        this.id = id;
     }
 
-    public String getEmpireName()
+    public String getName()
     {
-        return empireName;
+        return this.name;
     }
 
-    public void setEmpireName( String empireName )
+    public void setName( String name )
     {
-        this.empireName = empireName;
+        this.name = name;
     }
 
     public String getLeaderName()
@@ -96,24 +107,24 @@ public class Empire
         this.leaderType = leaderType;
     }
 
-    public List<Enemy> getEnemyList()
+    public List<Empire> getEnemyList()
     {
-        return enemyList;
+        return empireEnemyList;
     }
 
-    public void setEnemyList( List<Enemy> enemyList )
+    public void setEnemyList( List<Empire> empireEnemyList )
     {
-        this.enemyList = enemyList;
+        this.empireEnemyList = empireEnemyList;
     }
 
-    public List<Ally> getAllyList()
+    public List<Empire> getAllyList()
     {
-        return allyList;
+        return empireAllyList;
     }
 
-    public void setAllyList( List<Ally> allyList )
+    public void setAllyList( List<Empire> empireAllyList )
     {
-        this.allyList = allyList;
+        this.empireAllyList = empireAllyList;
     }
 
     public List<EmpireTerritory> getTerritoryList()

@@ -94,9 +94,6 @@ public class NpcFactory
             }
         }
 
-
-
-
         return npc;
     }
 

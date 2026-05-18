@@ -13,3 +13,8 @@ commands:
   magic-gui:
     description: "Opens a the Magic Item GUI"
     usage: "/magic-gui"
+  empire-cmd:
+    description: "Commands for managing empires"
+    usage: "/empire <subcommand> <args>"
+    tab-completer: com.cgms.minecraft.spigot.plugin.EmpireCommandTabCompleter
+

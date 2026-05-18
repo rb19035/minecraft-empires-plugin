@@ -6,6 +6,9 @@
 
 package com.cgms.minecraft.spigot.listener;
 
+import com.cgms.minecraft.spigot.database.EmpireFacade;
+import com.cgms.minecraft.spigot.database.EmpireNpcFacade;
+import com.cgms.minecraft.spigot.empire.Empire;
 import com.cgms.minecraft.spigot.empire.EmpireNPC;
 import com.cgms.minecraft.spigot.plugin.EntityType;
 import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
@@ -42,17 +45,23 @@ public class NpcSpawnItemDroppedListener implements Listener
 
             LOGGER.debug( "PlayerDropItemEvent caught for custom NPC {}", itemDroppedName );
 
+            EmpireNpcFacade empireNpcFacade = null;
+            EmpireFacade empireFacade = EmpireFacade.getInstance();
+            Empire empire = empireFacade.findByName( player.getName() );
+
+            EmpireNPC empireNPC = null;
             if( itemDroppedName.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_VILLAGER_TYPE ) )
             {
-                EmpireNPC empireNPC = new EmpireNPC( EntityType.VILLAGER,
+                empireNPC = new EmpireNPC(
+                        "name",
+                        EntityType.VILLAGER,
                         NpcType.VILLAGER,
-                        event.getItemDrop().getLocation(),
-                        player.getUniqueId().toString(),
-                        player.getName(),
-                        "temp"
+                        empire
                 );
 
-                empireNPC.spawnNPC();
+                empireNpcFacade.create( empireNPC );
+
+                empireNPC.spawn( event.getItemDrop().getLocation() );
 
             } else
             {
