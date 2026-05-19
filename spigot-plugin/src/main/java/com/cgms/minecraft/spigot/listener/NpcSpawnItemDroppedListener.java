@@ -12,7 +12,6 @@ import com.cgms.minecraft.spigot.empire.Empire;
 import com.cgms.minecraft.spigot.empire.EmpireNPC;
 import com.cgms.minecraft.spigot.plugin.EntityType;
 import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
-import com.cgms.minecraft.spigot.plugin.NpcFactory;
 import com.cgms.minecraft.spigot.plugin.NpcType;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Material;
@@ -23,8 +22,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.UUID;
 
 public class NpcSpawnItemDroppedListener implements Listener
 {
@@ -53,26 +50,49 @@ public class NpcSpawnItemDroppedListener implements Listener
             if( itemDroppedName.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_VILLAGER_TYPE ) )
             {
                 empireNPC = new EmpireNPC(
-                        "name",
+                        player.getName() + "Villager",
                         EntityType.VILLAGER,
                         NpcType.VILLAGER,
                         empire
                 );
 
-                empireNpcFacade.create( empireNPC );
-
-                empireNPC.spawn( event.getItemDrop().getLocation() );
-
-            } else
+            } else if ( itemDroppedName.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_ARCHER_TYPE ) )
             {
-                // Spawn a NPC at the location
-                npc = NpcFactory.spawnNPC( MinecraftEmpiresConstants.ENTITY_PLAYER_TYPE, event.getItemDrop().getLocation(),
-                        droppedItem.getItemStack().getItemMeta().getDisplayName(),
-                        player, UUID.randomUUID().toString()
+                empireNPC = new EmpireNPC(
+                        player.getName() + "Archer",
+                        EntityType.PLAYER,
+                        NpcType.ARCHER,
+                        empire
+                );
+            }
+            else if ( itemDroppedName.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_BODYGUARD_TYPE ) )
+            {
+                empireNPC = new EmpireNPC(
+                        player.getName() + "Bodyguard",
+                        EntityType.PLAYER,
+                        NpcType.BODY_GUARD,
+                        empire
+                );
+            } else if ( itemDroppedName.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE ) )
+            {
+                empireNPC = new EmpireNPC(
+                        player.getName() + "Knight",
+                        EntityType.PLAYER,
+                        NpcType.ARMORED_KNIGHT,
+                        empire
+                );
+            } else if ( itemDroppedName.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_FOOT_SOLDIER_TYPE ) )
+            {
+                empireNPC = new EmpireNPC(
+                        player.getName() + "Soldier",
+                        EntityType.PLAYER,
+                        NpcType.FOOT_SOLDIER,
+                        empire
                 );
             }
 
-            // Remove the dropped diamond
+            empireNpcFacade.create( empireNPC );
+            empireNPC.spawn( event.getItemDrop().getLocation() );
             droppedItem.remove();
         }
     }

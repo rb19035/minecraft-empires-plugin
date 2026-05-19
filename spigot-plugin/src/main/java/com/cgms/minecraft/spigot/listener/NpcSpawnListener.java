@@ -8,7 +8,7 @@ package com.cgms.minecraft.spigot.listener;
 
 import com.cgms.minecraft.spigot.database.EmpireFacade;
 import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
-import com.cgms.minecraft.spigot.plugin.NpcFactory;
+import com.cgms.minecraft.spigot.empire.NpcEquipmentUtility;
 import net.citizensnpcs.api.event.NPCSpawnEvent;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.event.EventHandler;
@@ -34,25 +34,25 @@ public class NpcSpawnListener implements Listener
             if( npc.getName().contains( MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE ) )
             {
                 LOGGER.info( "Found Knight...Setting equipment." );
-                NpcFactory.setNpcKnightEquipment( npc );
+                NpcEquipmentUtility.setNpcKnightEquipment( npc );
             }
 
             if( npc.getName().contains( MinecraftEmpiresConstants.NPC_FOOT_SOLDIER_TYPE ) )
             {
                 LOGGER.info( "Found Foot Soldier...Setting equipment." );
-                NpcFactory.setNpcFootSoldierEquipment( npc );
+                NpcEquipmentUtility.setNpcFootSoldierEquipment( npc );
             }
 
             if( npc.getName().contains( MinecraftEmpiresConstants.NPC_BODYGUARD_TYPE ) )
             {
                 LOGGER.info( "Found Bodyguard...Setting equipment." );
-                NpcFactory.setNpcBodyguardEquipment( npc );
+                NpcEquipmentUtility.setNpcBodyguardEquipment( npc );
             }
 
             if( npc.getName().contains( MinecraftEmpiresConstants.NPC_ARCHER_TYPE ) )
             {
                 LOGGER.info( "Found Archer...Setting equipment." );
-                NpcFactory.setNpcArcherEquipment( npc );
+                NpcEquipmentUtility.setNpcArcherEquipment( npc );
             }
         }
     }

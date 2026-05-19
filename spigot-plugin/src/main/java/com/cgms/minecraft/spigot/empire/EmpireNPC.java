@@ -7,13 +7,21 @@
 package com.cgms.minecraft.spigot.empire;
 
 import com.cgms.minecraft.spigot.plugin.EntityType;
+import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
 import com.cgms.minecraft.spigot.plugin.NpcType;
 import lombok.NonNull;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.trait.Inventory;
 import net.citizensnpcs.api.trait.trait.Owner;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Villager;
+import org.bukkit.inventory.ItemStack;
+import org.mcmonkey.sentinel.SentinelTrait;
+
+import java.util.UUID;
 
 public class EmpireNPC
 {
@@ -64,9 +72,54 @@ public class EmpireNPC
         this.npc.spawn( location );
         this.npc.setFlyable( false );
         this.npc.setProtected( false );
+        this.npc.setName( this.getName() );
 
         Owner ownerTrait = npc.getOrAddTrait( Owner.class );
         ownerTrait.setOwner( Bukkit.getPlayer( this.empire.getLeaderUUID() ) );
+
+        Inventory npcInventoryTrait = npc.getOrAddTrait(Inventory.class);
+
+        if ( this.npcType.equals( NpcType.VILLAGER ) )
+        {
+            Villager villager = (Villager) this.npc.getEntity();
+            villager.setProfession( Villager.Profession.FARMER );
+            villager.setVillagerLevel( 1 );
+            this.npc.data().set( NPC.Metadata.USE_MINECRAFT_AI, true );
+
+        } else
+        {
+            SentinelTrait sentinelTrait = npc.getOrAddTrait( SentinelTrait.class );
+            sentinelTrait.fightback = true;
+            sentinelTrait.invincible = false;
+            sentinelTrait.allowKnockback = true;
+            sentinelTrait.health = 20.0;
+            sentinelTrait.damage = -1.0;
+
+            if( this.npcType.equals( NpcType.ARMORED_KNIGHT ) )
+            {
+                NpcEquipmentUtility.setNpcKnightEquipment( this.npc );
+
+            } else if ( this.npcType.equals( NpcType.ARCHER ) )
+            {
+                NpcEquipmentUtility.setNpcArcherEquipment( this.npc );
+
+                // Add arrows to the NPC's inventory
+                for ( int i = 9; i < 18; i++ )
+                {
+                    npcInventoryTrait.setItem( i, new ItemStack( Material.ARROW, 64) );
+                }
+
+            } else if ( this.npcType.equals( NpcType.BODY_GUARD ) )
+            {
+                // Set NPC to guard player that created it.
+                sentinelTrait.setGuarding( UUID.fromString( this.empire.getLeaderUUID() ) );
+                NpcEquipmentUtility.setNpcBodyguardEquipment( npc );
+
+            } else if ( this.npcType.equals( NpcType.FOOT_SOLDIER ) )
+            {
+                NpcEquipmentUtility.setNpcFootSoldierEquipment( npc );
+            }
+        }
     }
 
     public int getId()
@@ -148,8 +201,27 @@ public class EmpireNPC
         } else if( entityType.equals( EntityType.VILLAGER ) )
         {
             npc = CitizensAPI.getNPCRegistry().createNPC( org.bukkit.entity.EntityType.VILLAGER, this.name );
+
+            Villager villager = (Villager) npc.getEntity();
+            villager.setProfession( Villager.Profession.FARMER );
+            villager.setVillagerLevel( 1 );
+
+            npc.data().set( NPC.Metadata.USE_MINECRAFT_AI, true );
         }
 
         return npc;
+    }
+
+    private static void deriveEnemyTargets( SentinelTrait sentinelTrait, boolean isEvil)
+    {
+        if( isEvil )
+        {
+            sentinelTrait.addTarget( "npc:" + MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE + " For Enemy");
+
+        } else
+        {
+            sentinelTrait.addTarget( "monsters" );
+            sentinelTrait.addTarget( "entity:pillager" );
+        }
     }
 }
