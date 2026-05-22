@@ -25,7 +25,7 @@ public abstract class DatabaseFacade<T>
     public abstract void create( @NonNull T object) throws UniqueConstraintException;
     public abstract void update( @NonNull T object) throws UniqueConstraintException;
     public abstract void delete( @NonNull T object);
-    public abstract T findByName( int id );
+    public abstract T findById( int id );
     public abstract T findByName( @NonNull String name );
 
     public DatabaseFacade()

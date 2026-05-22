@@ -24,6 +24,17 @@ public class EmpireNpcFacade extends DatabaseFacade<EmpireNPC>
     private static final EmpireNpcFacade INSTANCE = new EmpireNpcFacade();
     private static final Map<String, EmpireNPC> EMPIRE_NPC_CACHE = new ConcurrentHashMap<>();
 
+
+    private EmpireNpcFacade()
+    {
+        initEmpireNpcTable();
+    }
+
+    public static EmpireNpcFacade getInstance()
+    {
+        return INSTANCE;
+    }
+
     @Override
     public void create( @NonNull EmpireNPC object )
     {
@@ -34,7 +45,8 @@ public class EmpireNpcFacade extends DatabaseFacade<EmpireNPC>
             statement.setString( 1, object.getName() );
             statement.setString( 2, object.getEntityType().name() );
             statement.setString( 3, object.getNpcType().name() );
-            statement.setInt( 6, object.getEmpire().getId() );
+            statement.setInt( 4, object.getEmpire().getId() );
+            statement.setString( 5, object.getUuid() );
             statement.executeUpdate();
 
             try ( ResultSet generatedKeys = statement.getGeneratedKeys() )
@@ -63,10 +75,7 @@ public class EmpireNpcFacade extends DatabaseFacade<EmpireNPC>
             object.setName( StringEscapeUtils.escapeJava( object.getName() ) );
 
             statement.setString( 1, object.getName() );
-            statement.setString( 2, object.getEntityType().name() );
-            statement.setString( 3, object.getNpcType().name() );
-            statement.setInt( 6, object.getEmpire().getId() );
-            statement.setInt( 7, object.getId() );
+            statement.setInt( 2, object.getId() );
             statement.executeUpdate();
 
             EMPIRE_NPC_CACHE.put( object.getName(), object );
@@ -87,13 +96,13 @@ public class EmpireNpcFacade extends DatabaseFacade<EmpireNPC>
     }
 
     @Override
-    public EmpireNPC findByName( int id )
+    public EmpireNPC findById( int id )
     {
         return null;
     }
 
     @Override
-    public EmpireNPC findByName( @lombok.NonNull String name )
+    public EmpireNPC findByName( String name )
     {
         return null;
     }
@@ -114,23 +123,30 @@ public class EmpireNpcFacade extends DatabaseFacade<EmpireNPC>
     }
 
     private static final String CREATE_EMPIRE_NPC_TABLE_SQL =
-                            "CREATE TABLE IF NOT EXISTS empire_npc (" +
-                            " id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                            " name TEXT NOT NULL," +
-                            " entity_type TEXT NOT NULL," +
-                            " npc_type TEXT NOT NULL," +
-                            " empire_id INTEGER NOT NULL," +
-                            " FOREIGN KEY (empire_id) REFERENCES empire(id) ON DELETE CASCADE" +
-                            ");";
+            "CREATE TABLE IF NOT EXISTS empire_npc (" +
+            " id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            " name TEXT NOT NULL," +
+            " entity_type TEXT NOT NULL," +
+            " npc_type TEXT NOT NULL," +
+            " empire_id INTEGER NOT NULL," +
+            " uuid TEXT NOT NULL," +
+            " FOREIGN KEY (empire_id) REFERENCES empire(id) ON DELETE CASCADE" +
+            ");";
 
-    private static final String CREATE_EMPIRE_NPC_TABLE_NAME_INDEX_SQL = "CREATE UNIQUE INDEX IF NOT EXISTS empire_npc_name_index ON empire_npc (name);";
-    private static final String CREATE_EMPIRE_NPC_TABLE_EMPIRE_INDEX_SQL = "CREATE UNIQUE INDEX IF NOT EXISTS empire_npc_empire_index ON empire_npc (empire_id);";
+    private static final String CREATE_EMPIRE_NPC_TABLE_NAME_INDEX_SQL =
+            "CREATE UNIQUE INDEX IF NOT EXISTS " +
+            "empire_npc_uuid_index ON empire_npc (uuid);";
+
+    private static final String CREATE_EMPIRE_NPC_TABLE_EMPIRE_INDEX_SQL =
+            "CREATE INDEX IF NOT EXISTS " +
+            "empire_npc_empire_index ON empire_npc (empire_id);";
+
     private static final String INSERT_EMPIRE_NPC_SQL =
-                    "INSERT INTO empire_npc (name, entity_type, npc_type, owner_uuid, owner_name, empire_id) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            "INSERT INTO empire_npc (name, entity_type, npc_type, empire_id, uuid) " +
+            "VALUES (?, ?, ?, ?, ?)";
 
     private static final String UPDATE_EMPIRE_NPC_SQL =
-                    "UPDATE empire_npc (name, entity_type, npc_type, owner_uuid, owner_name, empire_id) " +
-                    "VALUES (?, ?, ?, ?, ?, ?) WHERE id = ?";
+            "UPDATE empire_npc (name) " +
+            "VALUES (?) WHERE id = ?";
 
 }

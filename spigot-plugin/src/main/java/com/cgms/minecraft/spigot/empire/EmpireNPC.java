@@ -7,7 +7,6 @@
 package com.cgms.minecraft.spigot.empire;
 
 import com.cgms.minecraft.spigot.plugin.EntityType;
-import com.cgms.minecraft.spigot.plugin.MinecraftEmpiresConstants;
 import com.cgms.minecraft.spigot.plugin.NpcType;
 import lombok.NonNull;
 import net.citizensnpcs.api.CitizensAPI;
@@ -30,7 +29,7 @@ public class EmpireNPC
     private EntityType entityType;
     private NpcType npcType;
     private Empire empire;
-
+    private String uuid;
     private NPC npc;
 
 
@@ -45,6 +44,9 @@ public class EmpireNPC
         this.entityType = entityType;
         this.npcType = npcType;
         this.empire = empire;
+
+        this.npc = this.deriveNPC();
+        this.uuid = npc.getUniqueId().toString();
     }
 
     public EmpireNPC(
@@ -59,6 +61,7 @@ public class EmpireNPC
         this.entityType = entityType;
         this.npcType = npcType;
         this.empire = empire;
+        this.uuid = npc.getUniqueId().toString();
         this.npc = npc;
     }
 
@@ -68,7 +71,6 @@ public class EmpireNPC
 
     public void spawn( Location location )
     {
-        this.npc = this.deriveNPC();
         this.npc.spawn( location );
         this.npc.setFlyable( false );
         this.npc.setProtected( false );
@@ -77,13 +79,16 @@ public class EmpireNPC
         Owner ownerTrait = npc.getOrAddTrait( Owner.class );
         ownerTrait.setOwner( Bukkit.getPlayer( this.empire.getLeaderUUID() ) );
 
-        Inventory npcInventoryTrait = npc.getOrAddTrait(Inventory.class);
+        Inventory npcInventoryTrait = this.npc.getOrAddTrait(Inventory.class);
 
         if ( this.npcType.equals( NpcType.VILLAGER ) )
         {
             Villager villager = (Villager) this.npc.getEntity();
             villager.setProfession( Villager.Profession.FARMER );
-            villager.setVillagerLevel( 1 );
+            villager.setVillagerLevel( 2 );
+            villager.setAI( true );
+            villager.setCanPickupItems( true );
+            villager.setBreed( true );
             this.npc.data().set( NPC.Metadata.USE_MINECRAFT_AI, true );
 
         } else
@@ -94,6 +99,7 @@ public class EmpireNPC
             sentinelTrait.allowKnockback = true;
             sentinelTrait.health = 20.0;
             sentinelTrait.damage = -1.0;
+            this.deriveEnemyTargets( sentinelTrait, false );
 
             if( this.npcType.equals( NpcType.ARMORED_KNIGHT ) )
             {
@@ -182,6 +188,16 @@ public class EmpireNPC
         this.npc = npc;
     }
 
+    public String getUuid()
+    {
+        return uuid;
+    }
+
+    public void setUuid( String uuid )
+    {
+        this.uuid = uuid;
+    }
+
     private NPC deriveNPC()
     {
         NPC npc = null;
@@ -201,27 +217,24 @@ public class EmpireNPC
         } else if( entityType.equals( EntityType.VILLAGER ) )
         {
             npc = CitizensAPI.getNPCRegistry().createNPC( org.bukkit.entity.EntityType.VILLAGER, this.name );
-
-            Villager villager = (Villager) npc.getEntity();
-            villager.setProfession( Villager.Profession.FARMER );
-            villager.setVillagerLevel( 1 );
-
-            npc.data().set( NPC.Metadata.USE_MINECRAFT_AI, true );
         }
 
         return npc;
     }
 
-    private static void deriveEnemyTargets( SentinelTrait sentinelTrait, boolean isEvil)
+    private void deriveEnemyTargets( @NonNull SentinelTrait sentinelTrait, boolean isEvil)
     {
-        if( isEvil )
+        for ( Empire enemy : this.empire.getEnemyList() )
         {
-            sentinelTrait.addTarget( "npc:" + MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE + " For Enemy");
-
-        } else
-        {
-            sentinelTrait.addTarget( "monsters" );
-            sentinelTrait.addTarget( "entity:pillager" );
+            sentinelTrait.addTarget( "uuid:" + empire.getLeaderUUID() );
+            sentinelTrait.addTarget( this.empire.getLeaderName() + ": Villager" );
+            sentinelTrait.addTarget( this.empire.getLeaderName() + ": Knight" );
+            sentinelTrait.addTarget( this.empire.getLeaderName() + ": Archer" );
+            sentinelTrait.addTarget( this.empire.getLeaderName() + ": Bodyguard" );
+            sentinelTrait.addTarget( this.empire.getLeaderName() + ": Soldier" );
         }
+
+        sentinelTrait.addTarget( "monsters" );
+        sentinelTrait.addTarget( "entity:pillager" );
     }
 }

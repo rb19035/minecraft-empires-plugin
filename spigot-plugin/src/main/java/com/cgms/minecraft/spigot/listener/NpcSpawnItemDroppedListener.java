@@ -42,15 +42,22 @@ public class NpcSpawnItemDroppedListener implements Listener
 
             LOGGER.debug( "PlayerDropItemEvent caught for custom NPC {}", itemDroppedName );
 
-            EmpireNpcFacade empireNpcFacade = null;
+            EmpireNpcFacade empireNpcFacade = EmpireNpcFacade.getInstance();
             EmpireFacade empireFacade = EmpireFacade.getInstance();
-            Empire empire = empireFacade.findByName( player.getName() );
+            Empire empire = empireFacade.findByPlayerUUID( player.getUniqueId().toString() );
+
+            if( empire == null )
+            {
+                LOGGER.debug( "No empire found for player UUID: {}", player.getUniqueId() );
+                player.sendMessage("You have not joined an empire yet. Please create an empire to spawn NPCs.");
+                return;
+            }
 
             EmpireNPC empireNPC = null;
             if( itemDroppedName.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_VILLAGER_TYPE ) )
             {
                 empireNPC = new EmpireNPC(
-                        player.getName() + "Villager",
+                        player.getName() + ": Villager",
                         EntityType.VILLAGER,
                         NpcType.VILLAGER,
                         empire
@@ -59,7 +66,7 @@ public class NpcSpawnItemDroppedListener implements Listener
             } else if ( itemDroppedName.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_ARCHER_TYPE ) )
             {
                 empireNPC = new EmpireNPC(
-                        player.getName() + "Archer",
+                        player.getName() + ": Archer",
                         EntityType.PLAYER,
                         NpcType.ARCHER,
                         empire
@@ -68,7 +75,7 @@ public class NpcSpawnItemDroppedListener implements Listener
             else if ( itemDroppedName.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_BODYGUARD_TYPE ) )
             {
                 empireNPC = new EmpireNPC(
-                        player.getName() + "Bodyguard",
+                        player.getName() + ": Bodyguard",
                         EntityType.PLAYER,
                         NpcType.BODY_GUARD,
                         empire
@@ -76,7 +83,7 @@ public class NpcSpawnItemDroppedListener implements Listener
             } else if ( itemDroppedName.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_ARMORED_KNIGHT_TYPE ) )
             {
                 empireNPC = new EmpireNPC(
-                        player.getName() + "Knight",
+                        player.getName() + ": Knight",
                         EntityType.PLAYER,
                         NpcType.ARMORED_KNIGHT,
                         empire
@@ -84,7 +91,7 @@ public class NpcSpawnItemDroppedListener implements Listener
             } else if ( itemDroppedName.equalsIgnoreCase( MinecraftEmpiresConstants.NPC_FOOT_SOLDIER_TYPE ) )
             {
                 empireNPC = new EmpireNPC(
-                        player.getName() + "Soldier",
+                        player.getName() + ": Soldier",
                         EntityType.PLAYER,
                         NpcType.FOOT_SOLDIER,
                         empire

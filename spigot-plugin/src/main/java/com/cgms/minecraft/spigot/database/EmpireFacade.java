@@ -124,7 +124,7 @@ public class EmpireFacade extends DatabaseFacade<Empire>
     }
 
     @Override
-    public Empire findByName( int id )
+    public Empire findById( int id )
     {
         LOGGER.debug( "Finding empire by id: {}", id );
 
@@ -203,6 +203,12 @@ public class EmpireFacade extends DatabaseFacade<Empire>
             ps.setString( 1, uuid );
             Empire empire = this.loadEmpire( ps.executeQuery() );
 
+            if ( empire == null )
+            {
+                LOGGER.debug( "No empire found for player UUID: {}", uuid );
+                return null;
+            }
+
             LOGGER.debug( "Found empire in DB by player UUID: {}", uuid );
 
             this.empireNameToEmpireMap.put( empire.getName(), empire );
@@ -246,7 +252,7 @@ public class EmpireFacade extends DatabaseFacade<Empire>
             // Bad ... Need to refactor this.
             while( rs.next() )
             {
-                empire.getAllyList().add( this.findByName( rs.getInt( 2 ) ) );
+                empire.getAllyList().add( this.findById( rs.getInt( 2 ) ) );
             }
 
             this.empireNameToEmpireMap.put( empire.getName(), empire );
@@ -268,7 +274,7 @@ public class EmpireFacade extends DatabaseFacade<Empire>
             // Bad ... Need to refactor this.
             while( rs.next() )
             {
-                empire.getEnemyList().add( this.findByName( rs.getInt( 2 ) ) );
+                empire.getEnemyList().add( this.findById( rs.getInt( 2 ) ) );
             }
 
             this.empireNameToEmpireMap.put( empire.getName(), empire );
