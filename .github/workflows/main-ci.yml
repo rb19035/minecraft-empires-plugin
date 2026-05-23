@@ -116,22 +116,74 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     container:
-      image: semgrep/semgrep
+      image: emgrep/semgrep:latest
 
     # Skip any PR created by dependabot to avoid permission issues:
     if: (github.actor != 'dependabot[bot]')
 
     steps:
-      - uses: actions/checkout@v4
-      - run: mkdir -p sarif && semgrep ci --sarif > sarif/${{ github.event.repository.name }}.semgrep-ce.sast.${{ github.run_number }}.sarif
+      # ── 1. Checkout ──────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Full history helps Semgrep diff-aware scanning on PRs
+          fetch-depth: 0
+
+      # ── 2. (Optional) Build first so bytecode is available ───
+      # Semgrep analyses source, not bytecode, so the build step
+      # is only needed if you generate sources (e.g. ANTLR, JOOQ).
+      # Remove or comment out if not applicable.
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Maven compile (generated sources only)
+        run: mvn --batch-mode --no-transfer-progress generate-sources
+        # Use 'compile' instead if Semgrep rules target .class paths or
+        # your project relies on annotation-processor-generated files.
+
+      # ── 3. Run Semgrep and emit SARIF ────────────────────────
+      - name: Run Semgrep SAST
+        run: |
+          semgrep scan \
+            --sarif \
+            --output semgrep.sarif \
+            --config "p/java"                \
+            --config "p/security-audit"      \
+            --config "p/owasp-top-ten"       \
+            --config "p/secrets"             \
+            --metrics off                    \
+            --severity WARNING               \
+            --timeout 300                    \
+            --jobs "$(nproc)"               \
+            .
+        # Environment variable enables Semgrep AppSec Platform features
+        # (PR comments, dashboard, managed rules).  Leave unset for
+        # fully offline / open-source usage.
         env:
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
-      - name: SAST GAS Upload
-        continue-on-error: true
-        uses: github/codeql-action/upload-sarif@v4
+      # ── 4. Upload SARIF as a pipeline artifact ───────────────
+      - name: Upload SARIF artifact
+        if: always() # upload even when Semgrep exits non-zero
+        uses: actions/upload-artifact@v4
         with:
-          sarif_file: sarif/${{ github.event.repository.name }}.semgrep-ce.sast.${{ github.run_number }}.sarif
+          name: semgrep-sarif-${{ github.run_number }}
+          path: semgrep.sarif
+          retention-days: 2
+
+      # ── 5. Push results to GitHub Security tab ───────────────
+      # Requires 'security-events: write' permission above and
+      # GitHub Advanced Security (GHAS) on private repositories.
+      - name: Upload SARIF to GitHub Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -143,7 +195,7 @@ jobs:
       - name: Upload SAST SARIF to S3
         run: |
           aws s3 cp \
-            sarif/${{ github.event.repository.name }}.semgrep-ce.sast.${{ github.run_number }}.sarif \
+            semgrep.sarif \
             s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ github.event.repository.name }}.semgrep-ce.sast.${{ github.run_number }}.sarif \
             --sse aws:kms \
             --no-progress
