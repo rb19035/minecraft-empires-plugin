@@ -64,7 +64,7 @@ jobs:
 
       - name: Upload artifacts to S3
         run: |
-          S3_DEST="s3://${{ secrets.AWS_ACCESS_KEY_MINECRAFT_EMPIRES_ARTIFACT_UPLOAD }}/"
+          S3_DEST="s3://${{ secrets.AWS_S3_MINECRAFT_EMPIRES_BUCKET }}/"
           for JAR in ${{ steps.find-artifacts.outputs.artifacts }}; do
             echo "Uploading $JAR..."
             aws s3 cp "$JAR" "$S3_DEST/$(basename $JAR)" \
@@ -108,7 +108,7 @@ jobs:
         run: |
           aws s3 cp \
             sarif/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif \
-            s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ secrets.S3_SARIF_KEY_PREFIX }}/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif \
+            s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif \
             --sse aws:kms \
             --no-progress
 
@@ -138,12 +138,12 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: 'us-east-1'
 
       - name: Upload SAST SARIF to S3
         run: |
           aws s3 cp \
             sarif/${{ github.event.repository.name }}.semgrep-ce.sast.${{ github.run_number }}.sarif \
-            s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ secrets.S3_SARIF_KEY_PREFIX }}/${{ github.event.repository.name }}.semgrep-ce.sast.${{ github.run_number }}.sarif \
+            s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ github.event.repository.name }}.semgrep-ce.sast.${{ github.run_number }}.sarif \
             --sse aws:kms \
             --no-progress
