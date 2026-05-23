@@ -116,7 +116,7 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     container:
-      image: emgrep/semgrep:latest
+      image: semgrep/semgrep:latest
 
     # Skip any PR created by dependabot to avoid permission issues:
     if: (github.actor != 'dependabot[bot]')
