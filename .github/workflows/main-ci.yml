@@ -26,24 +26,55 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file ./pom.xml
 
-      - name: Spigot Jar File Upload
-        uses: jakejarvis/s3-sync-action@master
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_MINECRAFT_EMPIRES_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_MINECRAFT_EMPIRES_ARTIFACT_UPLOAD }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_SECRET_MINECRAFT_EMPIRES_ARTIFACT_UPLOAD }}
-          AWS_REGION: 'us-east-1'
-          SOURCE_DIR: 'spigot-plugin/target/*.jar'
+  deploy:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Minecraft AI Jar File Upload
-        uses: jakejarvis/s3-sync-action@master
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_MINECRAFT_EMPIRES_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_MINECRAFT_EMPIRES_ARTIFACT_UPLOAD }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_SECRET_MINECRAFT_EMPIRES_ARTIFACT_UPLOAD }}
-          AWS_REGION: 'us-east-1'
-          SOURCE_DIR: 'minecraft-ai/target/*.jar'
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
 
+      - name: Build with Maven
+        run: mvn -B package --file ./pom.xml
+
+      - name: Find build artifacts
+        id: find-artifacts
+        run: |
+          ARTIFACTS=$(find spigot-plugin/target -maxdepth 1 -name "*.jar" | tr '\n' ' ')
+          if [ -z "$ARTIFACTS" ]; then
+            echo "No JAR artifacts found in spigot-plugin/target"
+            exit 1
+          fi
+          echo "Found artifacts: $ARTIFACTS"
+          echo "artifacts=$ARTIFACTS" >> "$GITHUB_OUTPUT"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_MINECRAFT_EMPIRES_ARTIFACT_UPLOAD }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET_MINECRAFT_EMPIRES_ARTIFACT_UPLOAD }}
+          aws-region: 'us-east-1'
+
+      - name: Upload artifacts to S3
+        run: |
+          S3_DEST="s3://${{ secrets.AWS_ACCESS_KEY_MINECRAFT_EMPIRES_ARTIFACT_UPLOAD }}/"
+          for JAR in ${{ steps.find-artifacts.outputs.artifacts }}; do
+            echo "Uploading $JAR..."
+            aws s3 cp "$JAR" "$S3_DEST/$(basename $JAR)" \
+              --sse aws:kms \
+              --no-progress
+          done
+
+      - name: Confirm S3 upload
+        run: |
+          aws s3 ls "s3://${{ secrets.AWS_S3_MINECRAFT_EMPIRES_BUCKET }}/"
 
   security-sca:
     needs: [ build ]
@@ -66,14 +97,20 @@ jobs:
         with:
           sarif_file: sarif/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif
 
-      - name: Sarif File Upload
-        uses: jakejarvis/s3-sync-action@master
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_DOJO_BUCKET}}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'us-east-1'
-          SOURCE_DIR: 'sarif'
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'us-east-1'
+
+      - name: Upload SCA SARIF to S3
+        run: |
+          aws s3 cp \
+            sarif/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif \
+            s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ secrets.S3_SARIF_KEY_PREFIX }}/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif \
+            --sse aws:kms \
+            --no-progress
 
   security-sast:
     needs: [ build ]
@@ -96,11 +133,17 @@ jobs:
         with:
           sarif_file: sarif/${{ github.event.repository.name }}.semgrep-ce.sast.${{ github.run_number }}.sarif
 
-      - name: Sarif File Upload
-        uses: jakejarvis/s3-sync-action@master
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_DOJO_BUCKET}}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'us-east-1'
-          SOURCE_DIR: 'sarif'
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload SAST SARIF to S3
+        run: |
+          aws s3 cp \
+            sarif/${{ github.event.repository.name }}.semgrep-ce.sast.${{ github.run_number }}.sarif \
+            s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ secrets.S3_SARIF_KEY_PREFIX }}/${{ github.event.repository.name }}.semgrep-ce.sast.${{ github.run_number }}.sarif \
+            --sse aws:kms \
+            --no-progress
