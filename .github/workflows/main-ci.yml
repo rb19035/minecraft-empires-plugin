@@ -140,11 +140,6 @@ jobs:
           java-version: "21"
           cache: maven
 
-      - name: Maven compile (generated sources only)
-        run: mvn --batch-mode --no-transfer-progress generate-sources
-        # Use 'compile' instead if Semgrep rules target .class paths or
-        # your project relies on annotation-processor-generated files.
-
       # ── 3. Run Semgrep and emit SARIF ────────────────────────
       - name: Run Semgrep SAST
         run: |
@@ -169,7 +164,7 @@ jobs:
       # ── 4. Upload SARIF as a pipeline artifact ───────────────
       - name: Upload SARIF artifact
         if: always() # upload even when Semgrep exits non-zero
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: semgrep-sarif-${{ github.run_number }}
           path: semgrep.sarif
