@@ -27,15 +27,13 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <!-- Replace with your desired Minecraft version (e.g., 1.20.1-R0.1-SNAPSHOT) -->
-            <version>1.21.11-R0.2-SNAPSHOT</version>
-            <scope>provided</scope>
+            <version>1.21.11-R0.2-20260324.161329-13</version>
         </dependency>
 
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizens-main</artifactId>
-            <version>2.0.41-20260109.225057-30</version>
+            <version>2.0.41-SNAPSHOT</version>
             <type>jar</type>
             <scope>provided</scope>
             <exclusions>
