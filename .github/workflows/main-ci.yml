@@ -182,7 +182,7 @@ jobs:
         - name: Upload SCA SARIF to S3
           run: |
             aws s3 cp \
-              sarif/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif \
+              ${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif \
               s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif \
               --sse aws:kms \
               --no-progress
@@ -190,7 +190,7 @@ jobs:
         - name: Upload SAST SARIF to S3
           run: |
             aws s3 cp \
-              sarif/${{ github.event.repository.name }}.semgrp.sast.${{ github.run_number }}.sarif \
+              ${{ github.event.repository.name }}.semgrp.sast.${{ github.run_number }}.sarif \
               s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ github.event.repository.name }}.semgrp.sast.${{ github.run_number }}.sarif \
               --sse aws:kms \
               --no-progress
