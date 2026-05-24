@@ -97,6 +97,14 @@ jobs:
         with:
           sarif_file: sarif/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif
 
+      - name: Upload SCA SARIF artifact
+        if: always() # upload even when Semgrep exits non-zero
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif
+          path: sarif/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif
+          retention-days: 2
+
   security-sast:
     needs: [ build ]
     runs-on: ubuntu-latest
@@ -155,7 +163,7 @@ jobs:
           category: semgrep
 
   upload-sarif-files:
-    needs: [ build ]
+    needs: [ build, security-sast, security-sca ]
     runs-on: ubuntu-latest
     steps:
         - name: Download SARIF files
