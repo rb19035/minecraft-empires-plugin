@@ -97,21 +97,6 @@ jobs:
         with:
           sarif_file: sarif/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: 'us-east-1'
-
-      - name: Upload SCA SARIF to S3
-        run: |
-          aws s3 cp \
-            sarif/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif \
-            s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif \
-            --sse aws:kms \
-            --no-progress
-
   security-sast:
     needs: [ build ]
     runs-on: ubuntu-latest
@@ -128,17 +113,6 @@ jobs:
         with:
           # Full history helps Semgrep diff-aware scanning on PRs
           fetch-depth: 0
-
-      # ── 2. (Optional) Build first so bytecode is available ───
-      # Semgrep analyses source, not bytecode, so the build step
-      # is only needed if you generate sources (e.g. ANTLR, JOOQ).
-      # Remove or comment out if not applicable.
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "21"
-          cache: maven
 
       # ── 3. Run Semgrep and emit SARIF ────────────────────────
       - name: Run Semgrep SAST
@@ -162,12 +136,12 @@ jobs:
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
       # ── 4. Upload SARIF as a pipeline artifact ───────────────
-      - name: Upload SARIF artifact
+      - name: Upload SAST SARIF artifact
         if: always() # upload even when Semgrep exits non-zero
         uses: actions/upload-artifact@v5
         with:
-          name: semgrep-sarif-${{ github.run_number }}
-          path: semgrep.sarif
+          name: ${{ github.event.repository.name }}.semgrp.sast.${{ github.run_number }}.sarif
+          path: sarif/${{ github.event.repository.name }}.semgrp.sast.${{ github.run_number }}.sarif
           retention-days: 2
 
       # ── 5. Push results to GitHub Security tab ───────────────
@@ -175,22 +149,39 @@ jobs:
       # GitHub Advanced Security (GHAS) on private repositories.
       - name: Upload SARIF to GitHub Code Scanning
         if: always()
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: semgrep.sarif
+          sarif_file: sarif/${{ github.event.repository.name }}.semgrp.sast.${{ github.run_number }}.sarif
           category: semgrep
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: 'us-east-1'
+  upload-sarif-files:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+        - name: Download SARIF files
+          uses: actions/download-artifact@v8
+          with:
+            path: sarif/*.sarif
 
-      - name: Upload SAST SARIF to S3
-        run: |
-          aws s3 cp \
-            semgrep.sarif \
-            s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ github.event.repository.name }}.semgrep-ce.sast.${{ github.run_number }}.sarif \
-            --sse aws:kms \
-            --no-progress
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: 'us-east-1'
+
+        - name: Upload SCA SARIF to S3
+          run: |
+            aws s3 cp \
+              sarif/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif \
+              s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ github.event.repository.name }}.snyk.sca.${{ github.run_number }}.sarif \
+              --sse aws:kms \
+              --no-progress
+
+        - name: Upload SAST SARIF to S3
+          run: |
+            aws s3 cp \
+              sarif/${{ github.event.repository.name }}.semgrp.sast.${{ github.run_number }}.sarif \
+              s3://${{ secrets.AWS_S3_DOJO_BUCKET }}/${{ github.event.repository.name }}.semgrp.sast.${{ github.run_number }}.sarif \
+              --sse aws:kms \
+              --no-progress
