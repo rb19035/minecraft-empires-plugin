@@ -178,6 +178,9 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: 'us-east-1'
 
+        - name: list files
+          run: ls -R
+
         - name: Upload SCA SARIF to S3
           run: |
             aws s3 cp \
