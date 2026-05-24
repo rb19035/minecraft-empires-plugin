@@ -179,7 +179,7 @@ jobs:
             aws-region: 'us-east-1'
 
         - name: list files
-          run: ls -R
+          run: ls -R sarif/
 
         - name: Upload SCA SARIF to S3
           run: |
