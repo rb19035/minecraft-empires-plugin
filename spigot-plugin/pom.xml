@@ -13,7 +13,7 @@
 
     <groupId>com.cgms.minecraft</groupId>
     <artifactId>minecraft-empires-spigot-plugin</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.9</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
